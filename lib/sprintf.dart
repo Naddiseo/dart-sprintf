@@ -48,14 +48,19 @@ String _get_padding(int count, String pad) {
 String _format_arg(String arg, Map options) {
   
   if (options['add_space']) {
-    arg = ' ${arg}';
+    arg = " ${arg}";
   }
   
   if (options['width'] > -1) {
     int diff = options['width'] - arg.length;
     if (diff > 0) {
       String padding = _get_padding(diff, options['padding_char']);
-      arg = '${padding}${arg}';
+      if (options['left_align']) {
+        arg = "${arg}${padding}";
+      }
+      else {
+        arg = "${padding}${arg}";
+      }
     }
   }
   

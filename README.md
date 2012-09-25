@@ -1,4 +1,40 @@
 dart-sprintf
 ============
 
-Dart implementation of sprintf
+Dart implementation of sprintf.
+
+Getting Started
+---------------
+
+Add the following to your **pubspec.yaml**:
+
+```
+dependencies:
+  dart-sprintf:
+    git: git://github.com/Naddiseo/dart-sprintf.git
+```
+
+then run **pub install**.
+
+Next, import dart-sprintf:
+
+```
+#import('package:sprintf/sprintf.dart');
+```
+
+### Example
+```
+#import('package:sprintf/sprintf.dart');
+
+void main() {
+	print(sprintf("%04i", [-42]));
+	print(sprintf("%s %s", ["Hello", "World"]));
+	print(sprintf("%#04x", [10]));
+}
+```
+
+```
+-042
+Hello World
+0x0a
+```

@@ -10,7 +10,7 @@ Add the following to your **pubspec.yaml**:
 
 ```
 dependencies:
-  dart-sprintf:
+  sprintf:
     git: git://github.com/Naddiseo/dart-sprintf.git
 ```
 

@@ -55,10 +55,19 @@ for prefix, type_map in expected.items():
 		
 		for input_data in input_array:
 			try:
+				if fmt_type in ['d', 'o', 'x', 'X']:
+					if '.6' in fmt:
+						# Precision not allowed in int format
+						new_expected[prefix][fmt_type].append('throws')
+						continue
+				
 				if fmt_type == '%':
-					new_expected[prefix][fmt_type].append('throws')
-					print fmt, 'throws'
-					continue
+					if len(prefix) > 0:
+						new_expected[prefix][fmt_type].append('throws')
+						print fmt, 'throws'
+						continue
+					else:
+						raise ValueError
 				else:
 					print fmt, fmt.replace('-', '<').format(input_data)
 					new_expected[prefix][fmt_type].append(fmt.replace('-', '<').format(input_data))
@@ -68,12 +77,14 @@ for prefix, type_map in expected.items():
 				try:
 					if isinstance(input_data, float):
 						sprintf(ret, cfmt, c_double(input_data))
+					else:
+						sprintf(ret, cfmt, input_data)
 					print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
 				except ArgumentError:
 					print "sprintf error {} {!r}".format(cfmt, input_data)
 
-with open('test_data.dart', 'w') as fp:
+with open('../test/test_data.dart', 'w') as fp:
 	formatted_data = pformat(new_expected)
 	
 	formatted_data = formatted_data.replace(']}', ']\n  }')
@@ -82,7 +93,9 @@ with open('test_data.dart', 'w') as fp:
 	formatted_data = formatted_data.replace("{'': {","{\n  '': {")
 	formatted_data = formatted_data.replace("'throws'", "throws")
 	
-	fp.write('var _expected = ')
+	fp.write("#library('test_data');\n")
+	fp.write("#import('../../../dart/dart-sdk/pkg/unittest/unittest.dart');\n") # TODO remove this
+	fp.write('var expectedTestData = ')
 	fp.write(formatted_data)
 	fp.write(';\n')
 

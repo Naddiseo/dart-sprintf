@@ -16,6 +16,10 @@ Map _parse_flags(String flags) {
 String _get_int_str(int arg, Map options) {
   var ret = arg.abs().toRadixString(options['radix']);
   
+  if (options['precision'] > -1) {
+    throw new Exception('Precision not allowed in integer format specifier');
+  }
+  
   if (options['alternate_form']) {
     if (options['radix'] == 16) {
       ret = "0x${ret}";
@@ -28,11 +32,6 @@ String _get_int_str(int arg, Map options) {
   // space "prefixes non-negative signed numbers with a space"
   if (options['add_space'] && arg > -1) {
     ret = " ${ret}";
-  }
-  
-  // zero is neither positive or negative
-  if (arg == 0) {
-    options['sign'] = '';
   }
   
   var padding = '';

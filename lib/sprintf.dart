@@ -14,21 +14,39 @@ Map _parse_flags(String flags) {
 
 
 String _get_int_str(int arg, Map options) {
-  String ret = arg.abs().toRadixString(options['radix']);
+  var ret = arg.abs().toRadixString(options['radix']);
   
-  if (options['sign'].length > 0) {
-    String padding = '';
-    if (options['width'] > -1 && (ret.length + 1) < options['width']) {
-      if (options['padding_char'] == '0') {
-        padding = _get_padding(options['width'] - ret.length - 1, '0');
-      }
+  if (options['alternate_form']) {
+    if (options['radix'] == 16) {
+      ret = "0x${ret}";
     }
-    ret = "${options['sign']}${padding}${ret}";
+    else if (options['radix'] == 8 && arg != 0) {
+      ret = "0${ret}";
+    }
   }
+  
+  // space "prefixes non-negative signed numbers with a space"
+  if (options['add_space'] && arg > -1) {
+    ret = " ${ret}";
+  }
+  
+  // zero is neither positive or negative
+  if (arg == 0) {
+    options['sign'] = '';
+  }
+  
+  var padding = '';
+  var sign_length = options['sign'].length;
+  if (options['width'] > -1 && (ret.length + sign_length) < options['width']) {
+    if (options['padding_char'] == '0') {
+      padding = _get_padding(options['width'] - ret.length - sign_length, '0');
+    }
+  }
+  ret = "${options['sign']}${padding}${ret}";
   
   return ret;
 }
-String _get_float_str(double arg, Map options) {
+String _get_float_str(num arg, Map options) {
   return arg.toString();
 }
 
@@ -47,18 +65,15 @@ String _get_padding(int count, String pad) {
 
 String _format_arg(String arg, Map options) {
   
-  if (options['add_space']) {
-    arg = " ${arg}";
-  }
-  
   if (options['width'] > -1) {
     int diff = options['width'] - arg.length;
     if (diff > 0) {
-      String padding = _get_padding(diff, options['padding_char']);
       if (options['left_align']) {
+        var padding = _get_padding(diff, ' ');
         arg = "${arg}${padding}";
       }
       else {
+        var padding = _get_padding(diff, options['padding_char']);
         arg = "${padding}${arg}";
       }
     }
@@ -115,12 +130,17 @@ String sprintf(String fmt, var args) {
     }
     
     if (_type == 's') { _arg_str = _arg; }
-    else if (_type == '%') { _arg_str = '%'; }
+    else if (_type == '%') { 
+      if (_flags.length > 0) {
+        throw new Exception('"%" does not take any flags');
+      }
+      _arg_str = '%'; 
+    }
     else { // else we're dealing with numbers
       
       var _formatter = _get_int_str;
       
-      if ((_arg as int) < 0) {
+      if ((_arg as num) < 0) {
         _options['sign'] = '-';
       }
       

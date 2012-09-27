@@ -19,34 +19,34 @@ var _test_suite_input = {
 
 main() {
   expectedTestData.forEach((prefix, type_map) {
-    group('"%${prefix}" Tests, ', 
+    group('"%${prefix}" Tests, ',
         () {
           type_map.forEach((type, expected_array) {
             var fmt = "|%${prefix}${type}|";
             var input_array = _test_suite_input[type];
-            
+
             assert(input_array.length == expected_array.length);
-            
+
             for (var i = 0; i < input_array.length - 1; i++) {
               var input = input_array[i];
               var expected = expected_array[i];
-              
+
               if (expected == throws) {
                 test("Expecting \"${fmt}\".format(${input}) to throw",
-                    () => expect(() => sprintf(fmt, [input]), expected)    
+                    () => expect(() => sprintf(fmt, [input]), expected)
                 );
               }
               else {
                 test("\"${fmt}\".format(${input}) == \"${expected}\"",
-                    () => expect(sprintf(fmt, [input]), expected)    
+                    () => expect(sprintf(fmt, [input]), expected)
                 );
               }
-              
+
             }
-          
+
           }); // type_map
         }
     );// group
   }); // _expected
-  
+
 }

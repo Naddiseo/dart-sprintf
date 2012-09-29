@@ -54,14 +54,12 @@ for prefix, type_map in expected.items():
 		cfmt = "|%{}{}|".format(prefix, fmt_type)
 		input_array = _test_suite_input[fmt_type];
 		
+		if fmt_type in 'doxX':
+			fmt.replace('d', 'lld').replace('o', 'llo').replace('x', 'llx').replace('X', 'llX')
+			cfmt.replace('d', 'lld').replace('o', 'llo').replace('x', 'llx').replace('X', 'llX')
+		
 		for input_data in input_array:
 			try:
-				if fmt_type in ['d', 'o', 'x', 'X']:
-					if '.6' in fmt:
-						# Precision not allowed in int format
-						new_expected[prefix][fmt_type].append('throws')
-						continue
-				
 				if fmt_type == '%':
 					if len(prefix) > 0:
 						new_expected[prefix][fmt_type].append('throws')
@@ -70,15 +68,10 @@ for prefix, type_map in expected.items():
 					else:
 						raise ValueError
 				elif fmt_type in 'doxX':
-					if input_data < 0:
-						result = fmt.replace('-', '<').format(input_data).replace('0o', '0')
-						print fmt, result
-						new_expected[prefix][fmt_type].append(result)
-					else:
-						ret = create_string_buffer(255)
-						sprintf(ret, cfmt, c_uint32(input_data))
-						print cfmt, ret.value
-						new_expected[prefix][fmt_type].append(ret.value)
+					ret = create_string_buffer(255)
+					sprintf(ret, cfmt, c_int64(input_data))
+					print cfmt, ret.value
+					new_expected[prefix][fmt_type].append(ret.value)
 				elif fmt_type in 'efgEFG':
 					ret = create_string_buffer(255)
 					sprintf(ret, cfmt, c_double(input_data))

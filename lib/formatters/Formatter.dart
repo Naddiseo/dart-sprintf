@@ -1,6 +1,6 @@
 #library('Formatter');
 
-abstract class Formatter {
+class Formatter {
   
   var fmt_type;
   var options;

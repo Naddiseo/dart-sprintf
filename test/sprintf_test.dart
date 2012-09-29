@@ -18,6 +18,7 @@ var _test_suite_input = {
 };
 
 main() {
+  if (true) {
   expectedTestData.forEach((prefix, type_map) {
     group('"%${prefix}" Tests, ',
         () {
@@ -48,5 +49,7 @@ main() {
         }
     );// group
   }); // _expected
-
+  }
+  //test("", () => expect(sprintf("|%6.6s|", ['']), '|      |'));;
+    
 }

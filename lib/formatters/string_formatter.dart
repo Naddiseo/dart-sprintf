@@ -10,6 +10,25 @@ class StringFormatter extends Formatter {
   }
   
   String toString() {
-    return _arg;
+    String ret = _arg;
+    
+    if (options['precision'] > -1 && options['precision'] <= ret.length) {
+      ret = ret.substring(0, options['precision']);
+    }
+    
+    if (options['width'] > -1) {
+      int diff = (options['width'] - ret.length);
+      
+      if (diff > 0) {
+        var padding = get_padding(diff, options['padding_char']);
+        if (!options['left_align']) {
+          ret = "${padding}${ret}";
+        }
+        else {
+          ret = "${ret}${padding}";
+        }
+      }
+    }
+    return ret;
   }
 }

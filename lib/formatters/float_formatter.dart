@@ -56,10 +56,13 @@ class FloatFormatter extends Formatter {
           ret = asExponential(options['precision'] - 1);
         }
       }
-      
     }
     
-    return ret;
+    if (options['is_upper']) {
+      ret = ret.toUpperCase();
+    }
+    
+    return "${options['sign']}${ret}";
   }
 
   int exponent() {

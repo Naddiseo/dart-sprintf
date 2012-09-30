@@ -4,19 +4,21 @@
 
 class FloatFormatter extends Formatter {
   double _arg;
-  String _int;
-  String _fraction;
+  String _int = '';
+  String _fraction = '';
   
   FloatFormatter(this._arg, var fmt_type, var options) : super(fmt_type, options) {
     var parts = _arg.toString().split('.'); // TODO: can't rely on '.' being the decimal separator
     this._int = parts[0].replaceAll('-', '');
-    this._fraction = parts[1];
+    if (parts.length > 1) {
+      this._fraction = parts[1];
+    }
   }
   
   String toString() {
     String ret = '';
     
-    if (options['add_space'] && options['sign'] == '' && _arg > 0) {
+    if (options['add_space'] && options['sign'] == '' && _arg >= 0) {
       options['sign'] = ' ';
     }
     

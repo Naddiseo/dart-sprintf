@@ -7,17 +7,17 @@ sprintf = CDLL('libc.so.6').sprintf
 
 _test_suite_input = {
   '%': [1, -1, 'a', 'asdf', 123],
-  'E': [123.0, -123.0, 0.0],
-  'F': [123.0, -123.0, 0.0],
-  'G': [123.0, -123.0, 0.0],
-  'X': [123, -123, 0],
-  'd': [123, -123, 0],
-  'e': [123.0, -123.0, 0.0],
-  'f': [123.0, -123.0, 0.0],
-  'g': [123.0, -123.0, 0.0],
-  'o': [123, -123, 0],
+  'E': [123.0, -123.0, 0.0, 1.79E+308],
+  'F': [123.0, -123.0, 0.0, 1.79E+308],
+  'G': [123.0, -123.0, 0.0, 1.79E+308],
+  'X': [123, -123, 0, 9007199254740991],
+  'd': [123, -123, 0, 9007199254740991],
+  'e': [123.0, -123.0, 0.0, 1.79E+308],
+  'f': [123.0, -123.0, 0.0, 1.79E+308],
+  'g': [123.0, -123.0, 0.0, 1.79E+308],
+  'o': [123, -123, 0, 9007199254740991],
   's': ['', 'Hello World'],
-  'x': [123, -123, 0]
+  'x': [123, -123, 0, 9007199254740991]
 };
 
 val = {
@@ -50,43 +50,36 @@ for prefix, type_map in expected.items():
 	
 		new_expected[prefix][fmt_type] = []
 		
-		fmt = "|{{:{}{}}}|".format(prefix, fmt_type)
 		cfmt = "|%{}{}|".format(prefix, fmt_type)
 		input_array = _test_suite_input[fmt_type];
 		
 		if fmt_type in 'doxX':
-			fmt.replace('d', 'lld').replace('o', 'llo').replace('x', 'llx').replace('X', 'llX')
 			cfmt.replace('d', 'lld').replace('o', 'llo').replace('x', 'llx').replace('X', 'llX')
 		
 		for input_data in input_array:
+			ret = create_string_buffer(1024)
 			try:
 				if fmt_type == '%':
 					if len(prefix) > 0:
 						new_expected[prefix][fmt_type].append('throws')
-						print fmt, 'throws'
+						print cfmt, 'throws'
 						continue
 					else:
 						raise ValueError
 				elif fmt_type in 'doxX':
-					ret = create_string_buffer(255)
 					sprintf(ret, cfmt, c_int64(input_data))
 					print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
 				elif fmt_type in 'efgEFG':
-					ret = create_string_buffer(255)
 					sprintf(ret, cfmt, c_double(input_data))
 					print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
 				else:
-					ret = create_string_buffer(255)
+					ret = create_string_buffer(1024)
 					sprintf(ret, cfmt, input_data)
 					print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
-				#else:
-				#	print fmt, fmt.replace('-', '<').format(input_data)
-				#	new_expected[prefix][fmt_type].append(fmt.replace('-', '<').format(input_data))
 			except ValueError:
-				ret = create_string_buffer(255)
 				
 				try:
 					if isinstance(input_data, float):

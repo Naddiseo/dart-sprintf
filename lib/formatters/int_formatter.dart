@@ -27,7 +27,7 @@ class IntFormatter extends Formatter {
     ret = _arg.toRadixString(radix);
     
     if (options['alternate_form']) {
-      if (radix == 16) {
+      if (radix == 16 && _arg != 0) {
         prefix = "0x";
       }
       else if (radix == 8 && _arg != 0) {

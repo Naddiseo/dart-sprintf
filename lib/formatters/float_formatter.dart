@@ -1,4 +1,5 @@
 #library('float_formatter');
+#import('dart:math');
 #import('Formatter.dart');
 
 class FloatFormatter extends Formatter {
@@ -8,12 +9,16 @@ class FloatFormatter extends Formatter {
   
   FloatFormatter(this._arg, var fmt_type, var options) : super(fmt_type, options) {
     var parts = _arg.toString().split('.'); // TODO: can't rely on '.' being the decimal separator
-    this._int = parts[0];
+    this._int = parts[0].replaceAll('-', '');
     this._fraction = parts[1];
   }
   
   String toString() {
     String ret = '';
+    
+    if (options['add_space'] && options['sign'] == '' && _arg > 0) {
+      options['sign'] = ' ';
+    }
     
     if ((_arg as num).isInfinite()) {
       if (_arg.isNegative()) {
@@ -23,6 +28,7 @@ class FloatFormatter extends Formatter {
       ret = 'inf';
       options['padding_char'] = ' ';
     }
+    
     if ((_arg as num).isNaN()) {
       ret = 'nan';
       options['padding_char'] = ' ';
@@ -34,6 +40,7 @@ class FloatFormatter extends Formatter {
     else if (fmt_type == 'g' && options['precision'] == 0) {
       options['precision'] = 1;
     }
+    
     if (_arg is num) {
       if (_arg.isNegative()) {
         _arg = -_arg;
@@ -48,21 +55,48 @@ class FloatFormatter extends Formatter {
       }
       else { // type == g
         var _exp = exponent();
+        var sig_digs = options['precision'];
         
         if (-4 <= _exp && _exp < options['precision']) {
-          ret = asFixed(options['precision'] - 1 - _exp);
+          sig_digs -= _int.length;
+          var precision = max(options['precision'] - 1 - _exp, sig_digs);
+          
+          ret = asFixed(precision, remove_trailing_zeros : !options['alternate_form']);
         }
         else {
-          ret = asExponential(options['precision'] - 1);
+          ret = asExponential(options['precision'] - 1, remove_trailing_zeros : options['alternate_form']);
         }
       }
+    }
+    
+    var min_chars = options['width'];
+    var str_len = ret.length + options['sign'].length;
+    var padding = '';
+    
+    if (min_chars > str_len) {
+      if (options['padding_char'] == '0' && !options['left_align']) {
+        padding = get_padding(min_chars - str_len, '0');
+      }
+      else {
+        padding = get_padding(min_chars - str_len, ' ');
+      }
+    }
+    
+    if (options['left_align']) {
+      ret ="${options['sign']}${ret}${padding}";
+    }
+    else if (options['padding_char'] == '0') {
+      ret = "${options['sign']}${padding}${ret}";
+    }
+    else {
+      ret = "${padding}${options['sign']}${ret}";
     }
     
     if (options['is_upper']) {
       ret = ret.toUpperCase();
     }
     
-    return "${options['sign']}${ret}";
+    return ret;
   }
 
   int exponent() {
@@ -81,17 +115,17 @@ class FloatFormatter extends Formatter {
     return 0;
   } 
   
-  String asFixed(int precision, {bool remove_trailing_zeros : true}) {
+  String asFixed(int precision, {bool remove_trailing_zeros : true, int sig_digs : -1}) {
     String ret = _arg.toStringAsFixed(precision);
     
-    if (remove_trailing_zeros) {
+    if (remove_trailing_zeros && sig_digs == -1) {
       ret = ret.replaceFirst(new RegExp(r'0*$'), '').replaceFirst(new RegExp(r'\.$'), '');
     }
     
     return ret;
   }
   
-  String asExponential(int precision, {bool remove_trailing_zeros : true}) {
+  String asExponential(int precision, {bool remove_trailing_zeros : true, int sig_digs : -1}) {
     String ret = _arg.toStringAsExponential(precision);
     
     var rx = new RegExp(r'(\d+)\.(\d+)(e|E)([-+]?)(\d+)');

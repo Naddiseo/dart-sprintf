@@ -12,11 +12,11 @@ class IntFormatter extends Formatter {
     var ret = '';
     var prefix = '';
     
-    options['radix'] = fmt_type == 'x' ? 16 : (fmt_type == 'o' ? 8 : 10);
+    var radix = fmt_type == 'x' ? 16 : (fmt_type == 'o' ? 8 : 10);
     
     if (_arg < 0) {
       _arg = _arg.abs();
-      if (options['radix'] == 10) {
+      if (radix == 10) {
         options['sign'] = '-';
       }
       else {
@@ -25,26 +25,26 @@ class IntFormatter extends Formatter {
     }
     
     
-    ret = _arg.toRadixString(options['radix']);
+    ret = _arg.toRadixString(radix);
 
     if (options['alternate_form']) {
-      if (options['radix'] == 16) {
+      if (radix == 16) {
         prefix = "0x";
       }
-      else if (options['radix'] == 8 && _arg != 0) {
+      else if (radix == 8 && _arg != 0) {
         prefix = "0";
       }
-      if (options['sign'] == '+') {
+      if (options['sign'] == '+' && radix != 10) {
         options['sign'] = '';
       }
     }
 
     // space "prefixes non-negative signed numbers with a space"
-    if ((options['add_space'] && options['sign'] == '' && _arg > -1 && options['radix'] == 10)) {
+    if ((options['add_space'] && options['sign'] == '' && _arg > -1 && radix == 10)) {
       options['sign'] = ' ';
     }
     
-    if (options['radix'] != 10) {
+    if (radix != 10) {
       options['sign'] = '';
     }
     
@@ -55,6 +55,10 @@ class IntFormatter extends Formatter {
     var sign_length = options['sign'].length;
     var str_len = 0;
     
+    if (radix == 8) {
+      num_length += prefix.length;
+    }
+    
     if (min_digits > num_length) {
       padding = get_padding(min_digits - num_length, '0');
       ret = "${padding}${ret}";
@@ -63,10 +67,14 @@ class IntFormatter extends Formatter {
     }
     
     // current number of characters that will be printed
-    str_len = num_length + sign_length + prefix.length;
-    
+    if (radix == 8) {
+      str_len = num_length + sign_length;
+    }
+    else {
+      str_len = num_length + sign_length + prefix.length;
+    }
     if (min_chars > str_len) {
-      if (options['padding_char'] == '0') {
+      if (options['padding_char'] == '0' && !options['left_align']) {
         padding = get_padding(min_chars - str_len, '0');
       }
       else {

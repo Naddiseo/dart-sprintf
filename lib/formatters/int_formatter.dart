@@ -24,9 +24,8 @@ class IntFormatter extends Formatter {
       }
     }
     
-    
     ret = _arg.toRadixString(radix);
-
+    
     if (options['alternate_form']) {
       if (radix == 16) {
         prefix = "0x";
@@ -38,7 +37,7 @@ class IntFormatter extends Formatter {
         options['sign'] = '';
       }
     }
-
+    
     // space "prefixes non-negative signed numbers with a space"
     if ((options['add_space'] && options['sign'] == '' && _arg > -1 && radix == 10)) {
       options['sign'] = ' ';
@@ -55,7 +54,7 @@ class IntFormatter extends Formatter {
     var sign_length = options['sign'].length;
     var str_len = 0;
     
-    if (radix == 8) {
+    if (radix == 8 && min_chars <= min_digits) {
       num_length += prefix.length;
     }
     
@@ -66,13 +65,7 @@ class IntFormatter extends Formatter {
       padding = '';
     }
     
-    // current number of characters that will be printed
-    if (radix == 8) {
-      str_len = num_length + sign_length;
-    }
-    else {
-      str_len = num_length + sign_length + prefix.length;
-    }
+    str_len = num_length + sign_length + prefix.length;
     if (min_chars > str_len) {
       if (options['padding_char'] == '0' && !options['left_align']) {
         padding = get_padding(min_chars - str_len, '0');
@@ -81,7 +74,6 @@ class IntFormatter extends Formatter {
         padding = get_padding(min_chars - str_len, ' ');
       }
     }
-    
     
     if (options['left_align']) {
       ret ="${options['sign']}${prefix}${ret}${padding}";

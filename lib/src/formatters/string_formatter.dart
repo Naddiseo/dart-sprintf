@@ -20,7 +20,7 @@ class StringFormatter extends Formatter {
       int diff = (options['width'] - ret.length);
 
       if (diff > 0) {
-        var padding = get_padding(diff, options['padding_char']);
+        var padding = Formatter.get_padding(diff, options['padding_char']);
         if (!options['left_align']) {
           ret = "${padding}${ret}";
         }

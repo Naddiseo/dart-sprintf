@@ -56,7 +56,7 @@ class IntFormatter extends Formatter {
     }
 
     if (min_digits > num_length) {
-      padding = get_padding(min_digits - num_length, '0');
+      padding = Formatter.get_padding(min_digits - num_length, '0');
       ret = "${padding}${ret}";
       num_length = ret.length;
       padding = '';
@@ -65,10 +65,10 @@ class IntFormatter extends Formatter {
     str_len = num_length + sign_length + prefix.length;
     if (min_chars > str_len) {
       if (options['padding_char'] == '0' && !options['left_align']) {
-        padding = get_padding(min_chars - str_len, '0');
+        padding = Formatter.get_padding(min_chars - str_len, '0');
       }
       else {
-        padding = get_padding(min_chars - str_len, ' ');
+        padding = Formatter.get_padding(min_chars - str_len, ' ');
       }
     }
 

@@ -7,7 +7,7 @@ class Formatter {
 
   Formatter(this.fmt_type, this.options);
 
-  String get_padding(int count, String pad) {
+  static String get_padding(int count, String pad) {
     String padding_piece = pad;
     StringBuffer padding = new StringBuffer();
 

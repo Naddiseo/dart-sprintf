@@ -71,12 +71,12 @@ class FloatFormatter extends Formatter {
           _decimal = _exponent + 1;
           _digits.addAll(int_part.split(''));
           _digits.addAll(fraction.split(''));
-          _digits.addAll(get_padding(diff, '0').split(''));
+          _digits.addAll(Formatter.get_padding(diff, '0').split(''));
         }
         else {
           var diff = int_part.length - _exponent - 1;
           _decimal = int_part.length;
-          _digits.addAll(get_padding(diff, '0').split(''));
+          _digits.addAll(Formatter.get_padding(diff, '0').split(''));
           _digits.addAll(int_part.split(''));
           _digits.addAll(fraction.split(''));
         }
@@ -149,10 +149,10 @@ class FloatFormatter extends Formatter {
 
     if (min_chars > str_len) {
       if (options['padding_char'] == '0' && !options['left_align']) {
-        padding = get_padding(min_chars - str_len, '0');
+        padding = Formatter.get_padding(min_chars - str_len, '0');
       }
       else {
-        padding = get_padding(min_chars - str_len, ' ');
+        padding = Formatter.get_padding(min_chars - str_len, ' ');
       }
     }
 
@@ -173,17 +173,25 @@ class FloatFormatter extends Formatter {
     return ret;
   }
 
-  String asFixed(int precision, {bool remove_trailing_zeros : true, int sig_digs : -1}) {
-    String ret = _arg.toStringAsFixed(precision);
-
-    if (remove_trailing_zeros && sig_digs == -1) {
-      ret = ret.replaceFirst(new RegExp(r'0*$'), '').replaceFirst(new RegExp(r'\.$'), '');
+  String asFixed(int precision, {bool remove_trailing_zeros : true}) {
+    String ret = _digits.getRange(0, _decimal).reduce('', (i,e) => "${i}${e}");
+    var offset = _decimal;
+    var extra_zeroes = precision - (_digits.length - offset);
+    
+    if (!remove_trailing_zeros) {
+      if (extra_zeroes > 0) {
+        _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
+      }
+      var trailing_digits =  _digits.getRange(offset, precision);
+      
+      var trailing_zeroes = trailing_digits.reduce('', (i,e) => "${i}${e}");
+      ret = "${ret}.${trailing_zeroes}";
     }
 
     return ret;
   }
 
-  String asExponential(int precision, {bool remove_trailing_zeros : true, int sig_digs : -1}) {
+  String asExponential(int precision, {bool remove_trailing_zeros : true}) {
     var offset = _decimal - _exponent;
     String ret = "${_digits[offset-1]}.";
     
@@ -191,7 +199,7 @@ class FloatFormatter extends Formatter {
     var extra_zeroes = precision  - (_digits.length - offset);
     
     if (extra_zeroes > 0) {
-      _digits.addAll(get_padding(extra_zeroes, '0').split(''));
+      _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
     }
     //print ("(${offset}, ${precision})${_digits}");
     var trailing_digits =  _digits.getRange(offset, precision);

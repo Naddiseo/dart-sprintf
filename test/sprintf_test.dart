@@ -6,21 +6,6 @@ import 'package:sprintf/sprintf.dart';
 
 part 'test_data.dart';
 
-var _test_suite_input = {
-  '%': [1, -1, 'a', 'asdf', 123],
-  'E': [123.0, -123.0, 0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
-  'F': [123.0, -123.0, 0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
-  'G': [123.0, -123.0, 0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
-  'X': [123, -123, 0, 9007199254740991],
-  'd': [123, -123, 0, 9007199254740991],
-  'e': [123.0, -123.0, 0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
-  'f': [123.0, -123.0, 0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
-  'g': [123.0, -123.0, 0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
-  'o': [123, -123, 0, 9007199254740991],
-  's': ['', 'Hello World'],
-  'x': [123, -123, 0, 9007199254740991]
-};
-
 main() {
   if (true) {
   expectedTestData.forEach((prefix, type_map) {
@@ -28,7 +13,7 @@ main() {
         () {
           type_map.forEach((type, expected_array) {
             var fmt = "|%${prefix}${type}|";
-            var input_array = _test_suite_input[type];
+            var input_array = expectedTestInputData[type];
 
             assert(input_array.length == expected_array.length);
 

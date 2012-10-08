@@ -3,3 +3,5 @@ pubspec.lock
 packages
 tools/test_data.dart
 *~
+.pydevproject
+.settings

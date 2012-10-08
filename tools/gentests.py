@@ -95,8 +95,8 @@ for prefix, type_map in expected.items():
 this_dir = os.path.dirname(os.path.abspath(__file__))
 test_data_path = os.path.abspath(os.path.join(this_dir, '..', 'test', 'test_data.dart'))
 
-with open(test_data_path, 'w') as fp:
-	formatted_data = pformat(new_expected)
+def prettify(expr):
+	formatted_data = pformat(expr)
 	
 	formatted_data = formatted_data.replace(']}', ']\n  }')
 	formatted_data = formatted_data.replace(": {'%':", ": {\n    '%':")
@@ -104,9 +104,17 @@ with open(test_data_path, 'w') as fp:
 	formatted_data = formatted_data.replace("{'': {", "{\n  '': {")
 	formatted_data = formatted_data.replace("'throws'", "throws")
 	
-	fp.write('var expectedTestData = ')
-	fp.write(formatted_data)
-	fp.write(';\n')
+	return formatted_data
 
+with open(test_data_path, 'w') as fp:
+	
+	
+	fp.write('var expectedTestData = ')
+	fp.write(prettify(new_expected))
+	fp.write(';\n')
+	
+	fp.write('var expectedTestInputData = ')
+	fp.write(prettify(_test_suite_input))
+	fp.write(';\n')
 
 			

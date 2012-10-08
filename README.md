@@ -38,3 +38,8 @@ void main() {
 Hello World
 0x0a
 ```
+
+Limitations
+-----------
+
+* Negative numbers are wrapped as 64bit ints when formatted as hex or octal.

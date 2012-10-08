@@ -7,14 +7,14 @@ sprintf = CDLL('libc.so.6').sprintf
 
 _test_suite_input = {
   '%': [1, -1, 'a', 'asdf', 123],
-  'E': [123.0, -123.0, 0.0, 1.79E+308],
-  'F': [123.0, -123.0, 0.0, 1.79E+308],
-  'G': [123.0, -123.0, 0.0, 1.79E+308],
+  'E': [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
+  'F': [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
+  'G': [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
   'X': [123, -123, 0, 9007199254740991],
   'd': [123, -123, 0, 9007199254740991],
-  'e': [123.0, -123.0, 0.0, 1.79E+308],
-  'f': [123.0, -123.0, 0.0, 1.79E+308],
-  'g': [123.0, -123.0, 0.0, 1.79E+308],
+  'e': [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
+  'f': [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
+  'g': [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20],
   'o': [123, -123, 0, 9007199254740991],
   's': ['', 'Hello World'],
   'x': [123, -123, 0, 9007199254740991]
@@ -50,11 +50,12 @@ for prefix, type_map in expected.items():
 	
 		new_expected[prefix][fmt_type] = []
 		
+		pyfmt = "|{{:{}{}}}|".format(prefix.replace('-', '<'), fmt_type)
 		cfmt = "|%{}{}|".format(prefix, fmt_type)
 		input_array = _test_suite_input[fmt_type];
 		
 		if fmt_type in 'doxX':
-			cfmt.replace('d', 'lld').replace('o', 'llo').replace('x', 'llx').replace('X', 'llX')
+			cfmt = cfmt.replace('d', 'lld').replace('o', 'llo').replace('x', 'llx').replace('X', 'llX')
 		
 		for input_data in input_array:
 			ret = create_string_buffer(1024)
@@ -65,31 +66,31 @@ for prefix, type_map in expected.items():
 						print cfmt, 'throws'
 						continue
 					else:
-						raise ValueError
+						sprintf(ret, cfmt, input_data)
+						print cfmt, ret.value
+						new_expected[prefix][fmt_type].append(ret.value)
+				
 				elif fmt_type in 'doxX':
+											
 					sprintf(ret, cfmt, c_int64(input_data))
 					print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
+					
+					#if 'x' in fmt_type and input_data == -123:
+					#	print "OUTPUT: {} {}".format(cfmt, ret.value)
+				
 				elif fmt_type in 'efgEFG':
 					sprintf(ret, cfmt, c_double(input_data))
 					print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
+				
 				else:
 					ret = create_string_buffer(1024)
 					sprintf(ret, cfmt, input_data)
 					print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
 			except ValueError:
-				
-				try:
-					if isinstance(input_data, float):
-						sprintf(ret, cfmt, c_double(input_data))
-					else:
-						sprintf(ret, cfmt, input_data)
-					print cfmt, ret.value
-					new_expected[prefix][fmt_type].append(ret.value)
-				except ArgumentError:
-					print "sprintf error {} {!r}".format(cfmt, input_data)
+				raise
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 test_data_path = os.path.abspath(os.path.join(this_dir, '..', 'test', 'test_data.dart'))
@@ -103,8 +104,6 @@ with open(test_data_path, 'w') as fp:
 	formatted_data = formatted_data.replace("{'': {", "{\n  '': {")
 	formatted_data = formatted_data.replace("'throws'", "throws")
 	
-	fp.write("#library('test_data');\n")
-	fp.write("#import('../../../dart/dart-sdk/pkg/unittest/unittest.dart');\n") # TODO remove this
 	fp.write('var expectedTestData = ')
 	fp.write(formatted_data)
 	fp.write(';\n')

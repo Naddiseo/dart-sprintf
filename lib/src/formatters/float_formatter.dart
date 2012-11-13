@@ -1,10 +1,11 @@
 part of sprintf;
 
-// TODO: can't rely on '.' being the decimal separator
-var _number_rx = const RegExp(r'^[\-\+]?(\d+)\.(\d+)$');
-var _expo_rx = const RegExp(r'^[\-\+]?(\d)\.(\d+)e([\-\+]?\d+)$'); 
-
 class FloatFormatter extends Formatter {
+  // TODO: can't rely on '.' being the decimal separator
+  static final _number_rx = new RegExp(r'^[\-\+]?(\d+)\.(\d+)$');
+  static final _expo_rx = new RegExp(r'^[\-\+]?(\d)\.(\d+)e([\-\+]?\d+)$');
+  static final _leading_zeroes_rx = new RegExp(r'^(0*)[1-9]+');
+
   double _arg;
   List<String> _digits = new List<String>();
   int _exponent = 0;
@@ -17,14 +18,14 @@ class FloatFormatter extends Formatter {
       this._is_negative = true;
       _arg = -_arg;
     }
-    
+
     var arg_str = _arg.toDouble().toString();
-    
+
     var m1 = _number_rx.firstMatch(arg_str);
     if (m1 != null) {
       var int_part = m1.group(1);
       var fraction = m1.group(2);
-      
+
       /*
        * Cases:
        * 1.2345    = 1.2345e0  -> [12345]    e+0 d1  l5
@@ -32,15 +33,15 @@ class FloatFormatter extends Formatter {
        * 0.12345   = 1.2345e-1 -> [012345]   e-1 d1  l6
        * 0.0012345 = 1.2345e-3 -> [00012345] e-3 d1  l8
        */
-      
+
       _decimal = int_part.length;
       _digits.addAll(int_part.split(''));
       _digits.addAll(fraction.split(''));
-      
+
       if (int_part.length == 1) {
         if (int_part == '0') {
-          var leading_zeroes_match = (new RegExp(r'^(0*)[1-9]+')).firstMatch(fraction);
-          
+          var leading_zeroes_match = _leading_zeroes_rx.firstMatch(fraction);
+
           if (leading_zeroes_match != null) {
             var zeroes_count = leading_zeroes_match.group(1).length;
            // print("zeroes_count=${zeroes_count}");
@@ -58,14 +59,14 @@ class FloatFormatter extends Formatter {
         _exponent = int_part.length - 1;
       }
     }
-    
+
     else {
       var m2 = _expo_rx.firstMatch(arg_str);
       if (m2 != null) {
         var int_part = m2.group(1);
         var fraction = m2.group(2);
         _exponent = int.parse(m2.group(3));
-        
+
         if (_exponent > 0) {
           var diff = _exponent - fraction.length + 1;
           _decimal = _exponent + 1;
@@ -80,8 +81,8 @@ class FloatFormatter extends Formatter {
           _digits.addAll(int_part.split(''));
           _digits.addAll(fraction.split(''));
         }
-        
-        
+
+
       } // else something wrong
     }
     //print("arg_str=${arg_str}");
@@ -95,8 +96,8 @@ class FloatFormatter extends Formatter {
       options['sign'] = ' ';
     }
 
-    if ((_arg as num).isInfinite()) {
-      if (_arg.isNegative()) {
+    if ((_arg as num).isInfinite) {
+      if (_arg.isNegative) {
         options['sign'] = '-';
       }
 
@@ -104,7 +105,7 @@ class FloatFormatter extends Formatter {
       options['padding_char'] = ' ';
     }
 
-    if ((_arg as num).isNaN()) {
+    if ((_arg as num).isNaN) {
       ret = 'nan';
       options['padding_char'] = ' ';
     }
@@ -177,13 +178,13 @@ class FloatFormatter extends Formatter {
     String ret = _digits.getRange(0, _decimal).reduce('', (i,e) => "${i}${e}");
     var offset = _decimal;
     var extra_zeroes = precision - (_digits.length - offset);
-    
+
     if (!remove_trailing_zeros) {
       if (extra_zeroes > 0) {
         _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
       }
       var trailing_digits =  _digits.getRange(offset, precision);
-      
+
       var trailing_zeroes = trailing_digits.reduce('', (i,e) => "${i}${e}");
       ret = "${ret}.${trailing_zeroes}";
     }
@@ -194,10 +195,10 @@ class FloatFormatter extends Formatter {
   String asExponential(int precision, {bool remove_trailing_zeros : true}) {
     var offset = _decimal - _exponent;
     String ret = "${_digits[offset-1]}.";
-    
-    
+
+
     var extra_zeroes = precision  - (_digits.length - offset);
-    
+
     if (extra_zeroes > 0) {
       _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
     }
@@ -205,13 +206,13 @@ class FloatFormatter extends Formatter {
     var trailing_digits =  _digits.getRange(offset, precision);
    // print ("trailing_digits=${trailing_digits}");
     var _exp_str = _exponent.abs().toString();
-    
+
     if (_exponent < 10 && _exponent > -10) {
       _exp_str = "0${_exp_str}";
     }
-    
+
     _exp_str = (_exponent < 0) ? "e-${_exp_str}" : "e+${_exp_str}";
-    
+
     if (remove_trailing_zeros) {
       var nzeroes = 0;
       for (var i = trailing_digits.length - 1; i > 0; i--) {
@@ -222,10 +223,10 @@ class FloatFormatter extends Formatter {
           break;
         }
       }
-      
+
       trailing_digits = trailing_digits.getRange(0, trailing_digits.length - nzeroes);
     }
-    
+
     ret = trailing_digits.reduce(ret, (i, e) => "${i}${e}");
     ret = "${ret}${_exp_str}";
 

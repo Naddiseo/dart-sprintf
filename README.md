@@ -19,12 +19,12 @@ then run **pub install**.
 Next, import dart-sprintf:
 
 ```
-#import('package:sprintf/sprintf.dart');
+import 'package:sprintf/sprintf.dart';
 ```
 
 ### Example
 ```
-#import('package:sprintf/sprintf.dart');
+import 'package:sprintf/sprintf.dart';
 
 void main() {
 	print(sprintf("%04i", [-42]));

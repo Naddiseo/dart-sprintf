@@ -13,14 +13,14 @@ test_testdata() {
       type_map.forEach((type, expected_array) {
         var fmt = "|%${prefix}${type}|";
         var input_array = expectedTestInputData[type];
-        
+
         assert(input_array.length == expected_array.length);
-        
+
         for (var i = 0; i < input_array.length - 1; i++) {
           var raw_input = input_array[i];
           var expected = expected_array[i];
           var input = raw_input is! List ? [raw_input] : raw_input;
-          
+
           if (expected == throws) {
             test("Expecting \"${fmt}\".format(${raw_input}) to throw",
                 () => expect(() => sprintf(fmt, input), expected)
@@ -31,9 +31,9 @@ test_testdata() {
                 () => expect(sprintf(fmt, input), expected)
             );
           }
-          
+
         }
-        
+
       }); // type_map
     }
     );// group
@@ -52,7 +52,7 @@ test_javascript_decimal_limit() {
   test("%x 9007199254740991", () => expect(sprintf("|%x|", [9007199254740991]), '|1fffffffffffff|'));
   test("%x 9007199254740992", () => expect(sprintf("|%x|", [9007199254740992]), '|20000000000000|'));
   test("%x 9007199254740993", () => expect(sprintf("|%x|", [9007199254740993]), '|20000000000001|'));
- 
+
   test("%x 9007199254740991", () => expect(sprintf("|%x|", [-9007199254740991]), '|ffe0000000000001|'));
   test("%x 9007199254740992", () => expect(sprintf("|%x|", [-9007199254740992]), '|ffe0000000000000|'));
   test("%x 9007199254740993", () => expect(sprintf("|%x|", [-9007199254740993]), '|ffdfffffffffffff|'));
@@ -83,15 +83,15 @@ test_large_exponents_f() {
 main() {
   if (true) {
     test_testdata();
-    
+
     test_javascript_decimal_limit();
     test_large_exponents_e();
     test_large_exponents_g();
    // test_large_exponents_f();
-    
+
     test_bug0001();
-    
-    
+
+
   }
 
 }

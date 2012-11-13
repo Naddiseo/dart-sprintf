@@ -1,10 +1,11 @@
-
-RegExp specifier = const RegExp(r'%(?:(\d+)\$)?([\+\-\#0 ]*)(\d+|\*)?(?:\.(\d+|\*))?([a-z%])', ignoreCase : true);
-RegExp uppercase_rx = const RegExp(r'[A-Z]', ignoreCase: false);
+part of sprintf;
 
 typedef PrintFormatFormatter(arg, options);
 
 class PrintFormat {
+  static final RegExp specifier = new RegExp(r'%(?:(\d+)\$)?([\+\-\#0 ]*)(\d+|\*)?(?:\.(\d+|\*))?([a-z%])', ignoreCase : true);
+  static final RegExp uppercase_rx = new RegExp(r'[A-Z]', ignoreCase: false);
+
   var _formatters = {
     'i' : (arg, options) => new IntFormatter(arg, 'i', options),
     'd' : (arg, options) => new IntFormatter(arg, 'd', options),
@@ -89,19 +90,19 @@ class PrintFormat {
       }
 
       // Add the pre-format string to the return
-      ret = ret.concat(fmt.substring(offset, m.start()));
-      offset = m.end();
+      ret = ret.concat(fmt.substring(offset, m.start));
+      offset = m.end;
 
       ret = ret.concat(_arg_str);
     }
 
     return ret.concat(fmt.substring(offset));
   }
-  
+
   register_specifier(String specifier, PrintFormatFormatter formatter) {
     this._formatters[specifier] = formatter;
   }
-  
+
   unregistier_specifier(String specifier) {
     this._formatters.remove(specifier);
   }

@@ -5,5 +5,4 @@ description:  >
 author: Richard Eames <dartsprintf@naddiseo.ca>
 homepage: https://github.com/Naddiseo/dart-sprintf
 dependencies:
-  unittest:
-    sdk: unittest
+  unittest: any

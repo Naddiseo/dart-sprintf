@@ -1,5 +1,5 @@
 name: sprintf
-version: 1.0.1
+version: 1.0.2
 description:  >
   Dart implementation of sprintf
 author: Richard Eames <dartsprintf@naddiseo.ca>

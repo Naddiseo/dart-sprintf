@@ -3,8 +3,8 @@ part of sprintf;
 typedef PrintFormatFormatter(arg, options);
 
 class PrintFormat {
-  static final RegExp specifier = new RegExp(r'%(?:(\d+)\$)?([\+\-\#0 ]*)(\d+|\*)?(?:\.(\d+|\*))?([a-z%])', ignoreCase : true);
-  static final RegExp uppercase_rx = new RegExp(r'[A-Z]', ignoreCase: false);
+  static final RegExp specifier = new RegExp(r'%(?:(\d+)\$)?([\+\-\#0 ]*)(\d+|\*)?(?:\.(\d+|\*))?([a-z%])', caseSensitive : false);
+  static final RegExp uppercase_rx = new RegExp(r'[A-Z]', caseSensitive: true);
 
   var _formatters = {
     'i' : (arg, options) => new IntFormatter(arg, 'i', options),
@@ -24,7 +24,6 @@ class PrintFormat {
     's' : (arg, options) => new StringFormatter(arg, 's', options),
   };
 
-  // TODO: make this an operator when M1 comes out
   String call(String fmt, var args) {
     String ret = '';
 
@@ -33,7 +32,7 @@ class PrintFormat {
     int arg_offset = 0;
 
     if (args is! List) {
-      throw new IllegalArgumentException('Expecting list as second argument');
+      throw new ArgumentError('Expecting list as second argument');
     }
 
     for (Match m in specifier.allMatches(fmt)) {
@@ -86,7 +85,7 @@ class PrintFormat {
         _arg_str = _formatters[_type](_arg, _options).toString();
       }
       else {
-        throw new IllegalArgumentException("Unknown format type ${_type}");
+        throw new ArgumentError("Unknown format type ${_type}");
       }
 
       // Add the pre-format string to the return

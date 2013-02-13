@@ -3,6 +3,8 @@ dart-sprintf
 
 Dart implementation of sprintf.
 
+[![Build Status](https://drone.io/naddiseo/dart-sprintf/status.png)](https://drone.io/naddiseo/dart-sprintf/latest)
+
 Getting Started
 ---------------
 

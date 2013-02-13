@@ -11,15 +11,15 @@ test_testdata() {
     group('"%${prefix}" Tests, ',
         () {
       type_map.forEach((type, expected_array) {
-        var fmt = "|%${prefix}${type}|";
+        String fmt = "|%${prefix}${type}|";
         var input_array = expectedTestInputData[type];
 
         assert(input_array.length == expected_array.length);
 
-        for (var i = 0; i < input_array.length - 1; i++) {
+        for (int i = 0; i < input_array.length - 1; i++) {
           var raw_input = input_array[i];
           var expected = expected_array[i];
-          var input = raw_input is! List ? [raw_input] : raw_input;
+          List input = raw_input is! List ? [raw_input] : raw_input;
 
           if (expected == throws) {
             test("Expecting \"${fmt}\".format(${raw_input}) to throw",
@@ -90,8 +90,5 @@ main() {
    // test_large_exponents_f();
 
     test_bug0001();
-
-
   }
-
 }

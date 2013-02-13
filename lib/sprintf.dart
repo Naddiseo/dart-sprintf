@@ -10,8 +10,4 @@ part 'src/sprintf_impl.dart';
 
 typedef SPrintF(String fmt, var args);
 
-var _printer = new PrintFormat();
-
-String sprintf(String fmt, var args) {
-  return _printer.call(fmt, args);
-}
+var sprintf = new PrintFormat();

@@ -6,10 +6,10 @@ class IntFormatter extends Formatter {
   IntFormatter(this._arg, var fmt_type, var options) : super(fmt_type, options);
 
   String toString() {
-    var ret = '';
-    var prefix = '';
+    String ret = '';
+    String prefix = '';
 
-    var radix = fmt_type == 'x' ? 16 : (fmt_type == 'o' ? 8 : 10);
+    int radix = fmt_type == 'x' ? 16 : (fmt_type == 'o' ? 8 : 10);
 
     if (_arg < 0) {
       _arg = _arg.abs();
@@ -44,12 +44,12 @@ class IntFormatter extends Formatter {
       options['sign'] = '';
     }
 
-    var padding = '';
+    String padding = '';
     var min_digits = options['precision'];
     var min_chars = options['width'];
-    var num_length = ret.length;
+    int num_length = ret.length;
     var sign_length = options['sign'].length;
-    var str_len = 0;
+    num str_len = 0;
 
     if (radix == 8 && min_chars <= min_digits) {
       num_length += prefix.length;

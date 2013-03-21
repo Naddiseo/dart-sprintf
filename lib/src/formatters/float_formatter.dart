@@ -175,7 +175,7 @@ class FloatFormatter extends Formatter {
   }
 
   String asFixed(int precision, {bool remove_trailing_zeros : true}) {
-    String ret = _digits.getRange(0, _decimal).reduce('', (i,e) => "${i}${e}");
+    String ret = _digits.sublist(0, _decimal).reduce('', (i,e) => "${i}${e}");
     int offset = _decimal;
     int extra_zeroes = precision - (_digits.length - offset);
 
@@ -183,7 +183,7 @@ class FloatFormatter extends Formatter {
       if (extra_zeroes > 0) {
         _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
       }
-      List<String> trailing_digits =  _digits.getRange(offset, precision);
+      List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
 
       var trailing_zeroes = trailing_digits.reduce('', (i,e) => "${i}${e}");
       ret = "${ret}.${trailing_zeroes}";
@@ -203,7 +203,7 @@ class FloatFormatter extends Formatter {
       _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
     }
     //print ("(${offset}, ${precision})${_digits}");
-    List<String> trailing_digits =  _digits.getRange(offset, precision);
+    List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
    // print ("trailing_digits=${trailing_digits}");
     String _exp_str = _exponent.abs().toString();
 
@@ -224,7 +224,7 @@ class FloatFormatter extends Formatter {
         }
       }
 
-      trailing_digits = trailing_digits.getRange(0, trailing_digits.length - nzeroes);
+      trailing_digits = trailing_digits.sublist(0, trailing_digits.length - nzeroes);
     }
 
     ret = trailing_digits.reduce(ret, (i, e) => "${i}${e}");

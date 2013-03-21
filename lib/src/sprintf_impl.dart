@@ -89,13 +89,13 @@ class PrintFormat {
       }
 
       // Add the pre-format string to the return
-      ret = ret.concat(fmt.substring(offset, m.start));
+      ret += fmt.substring(offset, m.start);
       offset = m.end;
 
-      ret = ret.concat(_arg_str);
+      ret += _arg_str;
     }
 
-    return ret.concat(fmt.substring(offset));
+    return ret += fmt.substring(offset);
   }
 
   register_specifier(String specifier, PrintFormatFormatter formatter) {

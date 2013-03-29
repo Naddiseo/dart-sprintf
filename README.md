@@ -12,8 +12,7 @@ Add the following to your **pubspec.yaml**:
 
 ```
 dependencies:
-  sprintf:
-    git: git://github.com/Naddiseo/dart-sprintf.git
+  sprintf: ">=1.0.5 <2.0.0"
 ```
 
 then run **pub install**.

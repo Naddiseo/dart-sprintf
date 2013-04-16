@@ -12,7 +12,7 @@ Add the following to your **pubspec.yaml**:
 
 ```
 dependencies:
-  sprintf: ">=1.0.5 <2.0.0"
+  sprintf: ">=1.0.6 <2.0.0"
 ```
 
 then run **pub install**.

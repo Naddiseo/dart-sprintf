@@ -175,7 +175,7 @@ class FloatFormatter extends Formatter {
   }
 
   String asFixed(int precision, {bool remove_trailing_zeros : true}) {
-    String ret = _digits.sublist(0, _decimal).reduce('', (i,e) => "${i}${e}");
+    String ret = _digits.sublist(0, _decimal).fold('', (i,e) => "${i}${e}");
     int offset = _decimal;
     int extra_zeroes = precision - (_digits.length - offset);
 
@@ -185,7 +185,7 @@ class FloatFormatter extends Formatter {
       }
       List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
 
-      var trailing_zeroes = trailing_digits.reduce('', (i,e) => "${i}${e}");
+      var trailing_zeroes = trailing_digits.fold('', (i,e) => "${i}${e}");
       ret = "${ret}.${trailing_zeroes}";
     }
 
@@ -227,7 +227,7 @@ class FloatFormatter extends Formatter {
       trailing_digits = trailing_digits.sublist(0, trailing_digits.length - nzeroes);
     }
 
-    ret = trailing_digits.reduce(ret, (i, e) => "${i}${e}");
+    ret = trailing_digits.fold(ret, (i, e) => "${i}${e}");
     ret = "${ret}${_exp_str}";
 
     return ret;

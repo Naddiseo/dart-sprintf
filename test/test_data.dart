@@ -1,3 +1,4 @@
+part of sprintf_test;
 var expectedTestData = {
   '': {
     '%': ['|%|', '|%|', '|%|', '|%|', '|%|'],

@@ -1,3 +1,5 @@
+library sprintf_test;
+
 import 'dart:math';
 
 import 'package:unittest/unittest.dart';

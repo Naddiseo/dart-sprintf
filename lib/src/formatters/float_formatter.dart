@@ -186,6 +186,9 @@ class FloatFormatter extends Formatter {
       List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
 
       var trailing_zeroes = trailing_digits.fold('', (i,e) => "${i}${e}");
+      if (trailing_zeroes.length == 0) {
+        return ret;
+      }
       ret = "${ret}.${trailing_zeroes}";
     }
 
@@ -194,7 +197,7 @@ class FloatFormatter extends Formatter {
 
   String asExponential(int precision, {bool remove_trailing_zeros : true}) {
     int offset = _decimal - _exponent;
-    String ret = "${_digits[offset-1]}.";
+    String ret = _digits[offset-1];
 
 
     int extra_zeroes = precision  - (_digits.length - offset);
@@ -226,7 +229,11 @@ class FloatFormatter extends Formatter {
 
       trailing_digits = trailing_digits.sublist(0, trailing_digits.length - nzeroes);
     }
-
+    
+    if (trailing_digits.length > 0) {
+      ret += '.';
+    }
+    
     ret = trailing_digits.fold(ret, (i, e) => "${i}${e}");
     ret = "${ret}${_exp_str}";
 

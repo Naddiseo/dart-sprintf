@@ -89,7 +89,7 @@ test_large_exponents_f() {
 }
 
 main() {
-  if (true) {
+  if (false) {
     test_testdata();
 
     test_javascript_decimal_limit();
@@ -100,4 +100,5 @@ main() {
     test_bug0001();
     test_bug0006();
   }
+	sprintf("|%.2f|", [5.466]);
 }

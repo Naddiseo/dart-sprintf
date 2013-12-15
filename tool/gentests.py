@@ -5,7 +5,7 @@ import os
 
 sprintf = CDLL('libc.so.6').sprintf
 
-float_tests = [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20]
+float_tests = [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20, 5.4444466]
 int_tests = [123, -123, 0, 9007199254740991]
 
 _test_suite_input = {
@@ -111,7 +111,7 @@ def prettify(expr):
 
 with open(test_data_path, 'w') as fp:
 	
-	
+	fp.write('part of sprintf_test;\n')
 	fp.write('var expectedTestData = ')
 	fp.write(prettify(new_expected))
 	fp.write(';\n')

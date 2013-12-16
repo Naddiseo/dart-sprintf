@@ -89,7 +89,7 @@ class FloatFormatter extends Formatter {
     //print("decimal=${_decimal}, exp=${_exponent}, digits=${_digits}");
   }
 
-  String toString() {
+  String asString() {
     String ret = '';
 
     if (options['add_space'] && options['sign'] == '' && _arg >= 0) {

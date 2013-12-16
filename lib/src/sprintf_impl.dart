@@ -82,7 +82,7 @@ class PrintFormat {
         _arg_str = '%';
       }
       else if (this._formatters.containsKey(_type)) {
-        _arg_str = _formatters[_type](_arg, _options).toString();
+        _arg_str = _formatters[_type](_arg, _options).asString();
       }
       else {
         throw new ArgumentError("Unknown format type ${_type}");

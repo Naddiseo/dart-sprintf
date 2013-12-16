@@ -7,7 +7,7 @@ class StringFormatter extends Formatter {
     options['padding_char'] = ' ';
   }
 
-  String toString() {
+  String asString() {
     String ret = _arg;
 
     if (options['precision'] > -1 && options['precision'] <= ret.length) {

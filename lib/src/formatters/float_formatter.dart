@@ -96,7 +96,7 @@ class FloatFormatter extends Formatter {
       options['sign'] = ' ';
     }
 
-    if ((_arg as num).isInfinite) {
+    if (_arg.isInfinite) {
       if (_arg.isNegative) {
         options['sign'] = '-';
       }
@@ -105,7 +105,7 @@ class FloatFormatter extends Formatter {
       options['padding_char'] = ' ';
     }
 
-    if ((_arg as num).isNaN) {
+    if (_arg.isNaN) {
       ret = 'nan';
       options['padding_char'] = ' ';
     }

@@ -12,6 +12,8 @@ class FloatFormatter extends Formatter {
   int _decimal = 0;
   bool _is_negative = false;
   bool _fraction_is_negative = false;
+  bool _has_init = false;
+	String _output = null;
 
   FloatFormatter(this._arg, var fmt_type, var options) : super(fmt_type, options) {
     if (_arg < 0) {
@@ -85,12 +87,21 @@ class FloatFormatter extends Formatter {
 
       } // else something wrong
     }
+	_has_init = true;
     //print("arg_str=${arg_str}");
     //print("decimal=${_decimal}, exp=${_exponent}, digits=${_digits}");
   }
 
   String asString() {
     String ret = '';
+		
+		if (!_has_init) {
+			return ret;
+		}
+		
+		if (_output != null) {
+			return _output;
+		}
 
     if (options['add_space'] && options['sign'] == '' && _arg >= 0) {
       options['sign'] = ' ';
@@ -171,26 +182,30 @@ class FloatFormatter extends Formatter {
       ret = ret.toUpperCase();
     }
 
-    return ret;
+    return (_output = ret);
   }
 
   String asFixed(int precision, {bool remove_trailing_zeros : true}) {
     String ret = _digits.sublist(0, _decimal).fold('', (i,e) => "${i}${e}");
     int offset = _decimal;
     int extra_zeroes = precision - (_digits.length - offset);
-
-    if (!remove_trailing_zeros) {
-      if (extra_zeroes > 0) {
-        _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
-      }
-      List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
-
-      var trailing_zeroes = trailing_digits.fold('', (i,e) => "${i}${e}");
-      if (trailing_zeroes.length == 0) {
-        return ret;
-      }
-      ret = "${ret}.${trailing_zeroes}";
+		int rounding_offset = offset + precision ;
+		
+    if (extra_zeroes > 0) {
+      _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
     }
+		
+		_round(rounding_offset, offset);
+		
+    List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
+    if (remove_trailing_zeros) {
+			trailing_digits = _remove_trailing_zeros(trailing_digits);
+    }
+    var trailing_zeroes = trailing_digits.fold('', (i,e) => "${i}${e}");
+    if (trailing_zeroes.length == 0) {
+      return ret;
+    }
+    ret = "${ret}.${trailing_zeroes}";
 
     return ret;
   }
@@ -205,11 +220,15 @@ class FloatFormatter extends Formatter {
     if (extra_zeroes > 0) {
       _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
     }
+		
+		_round(offset + precision, offset);
+		
     //print ("(${offset}, ${precision})${_digits}");
     List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
    // print ("trailing_digits=${trailing_digits}");
     String _exp_str = _exponent.abs().toString();
-
+		
+		
     if (_exponent < 10 && _exponent > -10) {
       _exp_str = "0${_exp_str}";
     }
@@ -217,17 +236,7 @@ class FloatFormatter extends Formatter {
     _exp_str = (_exponent < 0) ? "e-${_exp_str}" : "e+${_exp_str}";
 
     if (remove_trailing_zeros) {
-      int nzeroes = 0;
-      for (int i = trailing_digits.length - 1; i > 0; i--) {
-        if (trailing_digits[i] == '0') {
-          nzeroes++;
-        }
-        else {
-          break;
-        }
-      }
-
-      trailing_digits = trailing_digits.sublist(0, trailing_digits.length - nzeroes);
+			trailing_digits = _remove_trailing_zeros(trailing_digits);
     }
     
     if (trailing_digits.length > 0) {
@@ -239,4 +248,40 @@ class FloatFormatter extends Formatter {
 
     return ret;
   }
+	
+	List<String> _remove_trailing_zeros(List<String> trailing_digits) {
+		int nzeroes = 0;
+	  for (int i = trailing_digits.length - 1; i >= 0; i--) {
+		  if (trailing_digits[i] == '0') {
+		  	nzeroes++;
+		  }
+		  else {
+		  	break;
+	  	}
+ 		}
+		return trailing_digits.sublist(0, trailing_digits.length - nzeroes);
+	}
+	
+	void _round(var rounding_offset, var offset) {
+		int carry = 0;
+		while (rounding_offset > offset && rounding_offset < _digits.length) {
+			int d = int.parse(_digits[rounding_offset]) + carry;
+			if (d >= 5) {
+				int prev = int.parse(_digits[rounding_offset - 1]) + 1;
+				carry = prev > 9 ? 1 : 0;
+				if (carry > 0) {
+					prev = 0;
+				}
+				_digits[rounding_offset - 1] = prev.toString();
+				if (carry == 0) {
+					break;
+				}
+			}
+			else {
+				break;
+			}
+			rounding_offset--;
+		}
+	}
+	
 }

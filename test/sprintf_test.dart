@@ -1,7 +1,5 @@
 library sprintf_test;
 
-import 'dart:math';
-
 import 'package:unittest/unittest.dart';
 
 import 'package:sprintf/sprintf.dart';
@@ -46,10 +44,16 @@ test_bug0001() {
   test("|%x|%X| 255", () => expect(sprintf("|%x|%X|", [255, 255]), '|ff|FF|'));
 }
 
-test_bug0006() {
+test_bug0006a() {
   test("|%.0f| 5.466", () => expect(sprintf("|%.0f|", [5.466]), '|5|'));
   test("|%.0g| 5.466", () => expect(sprintf("|%.0g|", [5.466]), '|5|'));
   test("|%.0e| 5.466", () => expect(sprintf("|%.0e|", [5.466]), '|5e+00|'));
+}
+
+test_bug0006b() {
+	test("|%.2f| 5.466", () => expect(sprintf("|%.2f|", [5.466]), '|5.47|'));
+  test("|%.2g| 5.466", () => expect(sprintf("|%.2g|", [5.466]), '|5.5|'));
+  test("|%.2e| 5.466", () => expect(sprintf("|%.2e|", [5.466]), '|5.47e+00|'));
 }
 
 test_javascript_decimal_limit() {
@@ -98,6 +102,7 @@ main() {
    // test_large_exponents_f();
 
     test_bug0001();
-    test_bug0006();
+    test_bug0006a();
+		test_bug0006b();
   }
 }

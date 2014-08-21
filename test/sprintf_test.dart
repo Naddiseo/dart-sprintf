@@ -92,6 +92,12 @@ test_large_exponents_f() {
   test("|%f| -1.79e-308", () => expect(sprintf("|%f|", [-1.79e-308]), '|-1.790000e-308|'));
 }
 
+test_object_to_string() {
+  List<String> list = ["foo", "bar"];
+  int i= 1;
+  test("|%s| ['foo', 'bar'].toString()", () => expect(sprintf("%s", [list]), "[foo, bar]"));
+}
+
 main() {
   if (true) {
     test_testdata();
@@ -104,5 +110,7 @@ main() {
     test_bug0001();
     test_bug0006a();
 		test_bug0006b();
+
+		test_object_to_string();
   }
 }

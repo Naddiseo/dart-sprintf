@@ -1,14 +1,14 @@
 part of sprintf;
 
 class StringFormatter extends Formatter {
-  String _arg;
+  var _arg;
 
   StringFormatter(this._arg, var fmt_type, var options) : super(fmt_type, options) {
     options['padding_char'] = ' ';
   }
 
   String asString() {
-    String ret = _arg;
+    String ret = _arg.toString();
 
     if (options['precision'] > -1 && options['precision'] <= ret.length) {
       ret = ret.substring(0, options['precision']);

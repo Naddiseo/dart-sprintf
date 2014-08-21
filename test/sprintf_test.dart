@@ -51,7 +51,7 @@ test_bug0006a() {
 }
 
 test_bug0006b() {
-	test("|%.2f| 5.466", () => expect(sprintf("|%.2f|", [5.466]), '|5.47|'));
+  test("|%.2f| 5.466", () => expect(sprintf("|%.2f|", [5.466]), '|5.47|'));
   test("|%.2g| 5.466", () => expect(sprintf("|%.2g|", [5.466]), '|5.5|'));
   test("|%.2e| 5.466", () => expect(sprintf("|%.2e|", [5.466]), '|5.47e+00|'));
 }
@@ -109,8 +109,8 @@ main() {
 
     test_bug0001();
     test_bug0006a();
-		test_bug0006b();
+    test_bug0006b();
 
-		test_object_to_string();
+    test_object_to_string();
   }
 }

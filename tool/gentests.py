@@ -96,7 +96,7 @@ for prefix, type_map in expected.items():
 				raise
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
-test_data_path = os.path.abspath(os.path.join(this_dir, '..', 'test', 'test_data.dart'))
+test_data_path = os.path.abspath(os.path.join(this_dir, '..', 'test', 'testing_data.dart'))
 
 def prettify(expr):
 	formatted_data = pformat(expr)

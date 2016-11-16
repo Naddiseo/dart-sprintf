@@ -3,11 +3,15 @@ dart-sprintf
 
 Dart implementation of sprintf.
 
-[![Build Status](https://drone.io/naddiseo/dart-sprintf/status.png)](https://drone.io/naddiseo/dart-sprintf/latest)
+[![Build Status](https://travis-ci.org/Naddiseo/dart-sprintf.svg?branch=master)](https://travis-ci.org/Naddiseo/dart-sprintf/)
 
 
 ChangeLog
 ---------
+
+v1.1.1 (2016-11-16)
+
+	* Updated to use `test` library since `unittest` has been deprecated. 
 
 v1.1.0 (2014-08-21)
 

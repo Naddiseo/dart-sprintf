@@ -5,7 +5,7 @@ import os
 
 sprintf = CDLL('libc.so.6').sprintf
 
-float_tests = [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20, 5.4444466]
+float_tests = [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20, 5.4444466, 2.0999995]
 int_tests = [123, -123, 0, 9007199254740991]
 
 _test_suite_input = {
@@ -65,7 +65,7 @@ for prefix, type_map in expected.items():
 			try:
 				if fmt_type == '%':
 					if len(prefix) > 0:
-						new_expected[prefix][fmt_type].append('throws')
+						new_expected[prefix][fmt_type].append('"throwsA"')
 						print cfmt, 'throws'
 						continue
 					else:

@@ -21,9 +21,9 @@ test_testdata() {
           var expected = expected_array[i];
           List input = raw_input is! List ? [raw_input] : raw_input;
 
-          if (expected == throws) {
+          if (expected == '"throwsA"') {
             test("Expecting \"${fmt}\".format(${raw_input}) to throw",
-                () => expect(() => sprintf(fmt, input), expected)
+                () => expect(() => sprintf(fmt, input), throwsA(anything))
             );
           }
           else {
@@ -54,6 +54,10 @@ test_bug0006b() {
   test("|%.2f| 5.466", () => expect(sprintf("|%.2f|", [5.466]), '|5.47|'));
   test("|%.2g| 5.466", () => expect(sprintf("|%.2g|", [5.466]), '|5.5|'));
   test("|%.2e| 5.466", () => expect(sprintf("|%.2e|", [5.466]), '|5.47e+00|'));
+}
+
+test_bug0009() {
+	test("|%.2f| 2.09846", () => expect(sprintf("|%.2f|", [2.09846]), '|2.10|'));
 }
 
 test_javascript_decimal_limit() {
@@ -101,7 +105,6 @@ test_object_to_string() {
 main() {
   if (true) {
     test_testdata();
-
     test_javascript_decimal_limit();
     test_large_exponents_e();
     test_large_exponents_g();
@@ -111,6 +114,8 @@ main() {
     test_bug0006a();
     test_bug0006b();
 
-    test_object_to_string();
+    test_bug0009();
+
+    //test_object_to_string();
   }
 }

@@ -278,6 +278,8 @@ class FloatFormatter extends Formatter {
 				}
 			}
 			else {
+        d = int.parse(_digits[rounding_offset]) + carry;
+        _digits[rounding_offset - 1] = d.toString();
 				break;
 			}
 			rounding_offset--;

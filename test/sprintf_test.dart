@@ -60,6 +60,13 @@ test_bug0009() {
 	test("|%.2f| 2.09846", () => expect(sprintf("|%.2f|", [2.09846]), '|2.10|'));
 }
 
+test_bug0010() {
+  test("|%.1f| 5.34", () => expect(sprintf("|%.1f|", [5.34]), '|5.3|'));
+  test("|%.1f| 22.51", () => expect(sprintf("|%.1f|", [22.51]), '|22.5|'));
+  test("|%.0f| 22.5", () => expect(sprintf("|%.0f|", [22.5]), '|23|'));
+  test("|%.0f| 22.77", () => expect(sprintf("|%.0f|", [22.77]), '|23|'));
+}
+
 test_javascript_decimal_limit() {
   test("%d 9007199254740991", () => expect(sprintf("|%d|", [9007199254740991]), '|9007199254740991|'));
   test("%d 9007199254740992", () => expect(sprintf("|%d|", [9007199254740992]), '|9007199254740992|'));
@@ -103,18 +110,23 @@ test_object_to_string() {
 }
 
 main() {
+  //test_bug0009();
+  //test_bug0010();
+  //test("|%f| 1.79E+308", () => expect(sprintf("|%f|", [1.79e+308]), '|1.79e+308|'));
+
   if (true) {
     test_testdata();
     test_javascript_decimal_limit();
     test_large_exponents_e();
     test_large_exponents_g();
-   // test_large_exponents_f();
+    //test_large_exponents_f();
 
     test_bug0001();
     test_bug0006a();
     test_bug0006b();
 
     test_bug0009();
+    test_bug0010();
 
     //test_object_to_string();
   }

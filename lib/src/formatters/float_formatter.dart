@@ -7,7 +7,7 @@ class FloatFormatter extends Formatter {
   static final _leading_zeroes_rx = new RegExp(r'^(0*)[1-9]+');
 
   double _arg;
-  List<String> _digits = new List<String>();
+  List<int> _digits = new List<int>();
   int _exponent = 0;
   int _decimal = 0;
   bool _is_negative = false;
@@ -37,8 +37,8 @@ class FloatFormatter extends Formatter {
        */
 
       _decimal = int_part.length;
-      _digits.addAll(int_part.split(''));
-      _digits.addAll(fraction.split(''));
+      _digits.addAll(int_part.split('').map(int.parse));
+      _digits.addAll(fraction.split('').map(int.parse));
 
       if (int_part.length == 1) {
         if (int_part == '0') {
@@ -72,16 +72,16 @@ class FloatFormatter extends Formatter {
         if (_exponent > 0) {
           int diff = _exponent - fraction.length + 1;
           _decimal = _exponent + 1;
-          _digits.addAll(int_part.split(''));
-          _digits.addAll(fraction.split(''));
-          _digits.addAll(Formatter.get_padding(diff, '0').split(''));
+          _digits.addAll(int_part.split('').map(int.parse));
+          _digits.addAll(fraction.split('').map(int.parse));
+          _digits.addAll(Formatter.get_padding(diff, '0').split('').map(int.parse));
         }
         else {
           int diff = int_part.length - _exponent - 1;
           _decimal = int_part.length;
-          _digits.addAll(Formatter.get_padding(diff, '0').split(''));
-          _digits.addAll(int_part.split(''));
-          _digits.addAll(fraction.split(''));
+          _digits.addAll(Formatter.get_padding(diff, '0').split('').map(int.parse));
+          _digits.addAll(int_part.split('').map(int.parse));
+          _digits.addAll(fraction.split('').map(int.parse));
         }
 
 
@@ -186,18 +186,17 @@ class FloatFormatter extends Formatter {
   }
 
   String asFixed(int precision, {bool remove_trailing_zeros : true}) {
-    String ret = _digits.sublist(0, _decimal).fold('', (i,e) => "${i}${e}");
-    int offset = _decimal;
+    int offset = _decimal + precision - 1;
     int extra_zeroes = precision - (_digits.length - offset);
-		int rounding_offset = offset + precision ;
-		
+
     if (extra_zeroes > 0) {
-      _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
+      _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split('').map(int.parse));
     }
-		
-		_round(rounding_offset, offset);
-		
-    List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
+
+    _round(offset + 1, offset);
+
+    String ret = _digits.sublist(0, _decimal).fold('', (i,e) => "${i}${e}");
+    List<int> trailing_digits =  _digits.sublist(_decimal, _decimal+ precision);
     if (remove_trailing_zeros) {
 			trailing_digits = _remove_trailing_zeros(trailing_digits);
     }
@@ -212,19 +211,19 @@ class FloatFormatter extends Formatter {
 
   String asExponential(int precision, {bool remove_trailing_zeros : true}) {
     int offset = _decimal - _exponent;
-    String ret = _digits[offset-1];
 
 
-    int extra_zeroes = precision  - (_digits.length - offset);
+    int extra_zeroes = precision - (_digits.length - offset) + 1;
 
     if (extra_zeroes > 0) {
-      _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split(''));
+      _digits.addAll(Formatter.get_padding(extra_zeroes, '0').split('').map(int.parse));
     }
-		
-		_round(offset + precision, offset);
-		
+
+    _round(offset + precision, offset);
+
+    String ret = _digits[offset - 1].toString();
     //print ("(${offset}, ${precision})${_digits}");
-    List<String> trailing_digits =  _digits.sublist(offset, offset + precision);
+    List<int> trailing_digits = _digits.sublist(offset, offset + precision);
    // print ("trailing_digits=${trailing_digits}");
     String _exp_str = _exponent.abs().toString();
 		
@@ -249,10 +248,10 @@ class FloatFormatter extends Formatter {
     return ret;
   }
 	
-	List<String> _remove_trailing_zeros(List<String> trailing_digits) {
+	List<int> _remove_trailing_zeros(List<int> trailing_digits) {
 		int nzeroes = 0;
 	  for (int i = trailing_digits.length - 1; i >= 0; i--) {
-		  if (trailing_digits[i] == '0') {
+		  if (trailing_digits[i] == 0) {
 		  	nzeroes++;
 		  }
 		  else {
@@ -261,29 +260,33 @@ class FloatFormatter extends Formatter {
  		}
 		return trailing_digits.sublist(0, trailing_digits.length - nzeroes);
 	}
-	
+
+	/*
+	rounding_offset: Where to start rounding from
+	offset: where to end rounding
+	 */
 	void _round(var rounding_offset, var offset) {
 		int carry = 0;
-		while (rounding_offset > offset && rounding_offset < _digits.length) {
-			int d = int.parse(_digits[rounding_offset]) + carry;
-			if (d >= 5) {
-				int prev = int.parse(_digits[rounding_offset - 1]) + 1;
-				carry = prev > 9 ? 1 : 0;
-				if (carry > 0) {
-					prev = 0;
-				}
-				_digits[rounding_offset - 1] = prev.toString();
-				if (carry == 0) {
-					break;
-				}
-			}
-			else {
-        d = int.parse(_digits[rounding_offset]) + carry;
-        _digits[rounding_offset - 1] = d.toString();
-				break;
-			}
-			rounding_offset--;
-		}
-	}
+
+		// Round the digit after the precision
+		int d = _digits[rounding_offset];
+    carry = d >= 5 ? 1 : 0;
+		_digits[rounding_offset] = d % 10;
+		rounding_offset -= 1;
+
+		//propagate the carry
+    while (carry > 0) {
+      d = _digits[rounding_offset] + carry;
+      if (rounding_offset == 0 && d > 9) {
+        _digits.insert(0, 0);
+        _decimal += 1;
+        rounding_offset += 1;
+      }
+      carry = d < 10 ? 0 : 1;
+      _digits[rounding_offset] = d % 10;
+      rounding_offset -= 1;
+    }
+
+  }
 	
 }

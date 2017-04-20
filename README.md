@@ -8,6 +8,9 @@ Dart implementation of sprintf.
 
 ChangeLog
 ---------
+v3.0.0 (2017-04-20)
+
+    * Fixed rounding of floats, again. Bumping major version because it's different from previous behaviour
 
 v2.0.0 (2017-03-23)
 

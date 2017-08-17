@@ -1,12 +1,12 @@
 part of sprintf;
 
-typedef PrintFormatFormatter(arg, options);
+typedef Formatter PrintFormatFormatter(arg, options);
 
 class PrintFormat {
   static final RegExp specifier = new RegExp(r'%(?:(\d+)\$)?([\+\-\#0 ]*)(\d+|\*)?(?:\.(\d+|\*))?([a-z%])', caseSensitive : false);
   static final RegExp uppercase_rx = new RegExp(r'[A-Z]', caseSensitive: true);
 
-  var _formatters = {
+  Map<String, PrintFormatFormatter> _formatters = {
     'i' : (arg, options) => new IntFormatter(arg, 'i', options),
     'd' : (arg, options) => new IntFormatter(arg, 'd', options),
     'x' : (arg, options) => new IntFormatter(arg, 'x', options),

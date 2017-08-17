@@ -1,6 +1,6 @@
 part of sprintf;
 
-class Formatter {
+abstract class Formatter {
 
   var fmt_type;
   var options;
@@ -19,4 +19,6 @@ class Formatter {
 
     return padding.toString();
   }
+
+  String asString();
 }

@@ -8,6 +8,10 @@ Dart implementation of sprintf.
 
 ChangeLog
 ---------
+v3.0.1 (2017-08-17)
+
+    * Fixed weak typing which stopped dartdevc from working (#11 thanks @bergwerf)
+
 v3.0.0 (2017-04-20)
 
     * Fixed rounding of floats, again. Bumping major version because it's different from previous behaviour

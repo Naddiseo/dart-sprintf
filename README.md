@@ -8,6 +8,10 @@ Dart implementation of sprintf.
 
 ChangeLog
 ---------
+v3.0.2 (2017-08-17
+
+	* Fixed bad publish
+
 v3.0.1 (2017-08-17)
 
     * Fixed weak typing which stopped dartdevc from working (#11 thanks @bergwerf)

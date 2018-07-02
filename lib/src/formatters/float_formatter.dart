@@ -185,7 +185,7 @@ class FloatFormatter extends Formatter {
     return (_output = ret);
   }
 
-  String asFixed(int precision, {bool remove_trailing_zeros : true}) {
+  String asFixed(int precision, {bool remove_trailing_zeros = true}) {
     int offset = _decimal + precision - 1;
     int extra_zeroes = precision - (_digits.length - offset);
 
@@ -209,7 +209,7 @@ class FloatFormatter extends Formatter {
     return ret;
   }
 
-  String asExponential(int precision, {bool remove_trailing_zeros : true}) {
+  String asExponential(int precision, {bool remove_trailing_zeros = true}) {
     int offset = _decimal - _exponent;
 
 

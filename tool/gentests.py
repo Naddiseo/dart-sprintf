@@ -21,7 +21,7 @@ _test_suite_input = {
   'o': int_tests,
   's': ['', 'Hello World'],
   'x': int_tests
-};
+}
 
 val = {
     'd' : '',
@@ -55,7 +55,7 @@ for prefix, type_map in expected.items():
 		
 		pyfmt = "|{{:{}{}}}|".format(prefix.replace('-', '<'), fmt_type)
 		cfmt = "|%{}{}|".format(prefix, fmt_type)
-		input_array = _test_suite_input[fmt_type];
+		input_array = _test_suite_input[fmt_type]
 		
 		if fmt_type in 'doxX':
 			cfmt = cfmt.replace('d', 'lld').replace('o', 'llo').replace('x', 'llx').replace('X', 'llX')

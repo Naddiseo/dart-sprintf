@@ -5,8 +5,10 @@ import os
 
 sprintf = CDLL('libc.so.6').sprintf
 
+JS_MAX=9007199254740991
+JS_MIN=-9007199254740991
 float_tests = [123.0, -123.0, 0.0, 1.79E+20, -1.79E+20, 1.79E-20, -1.79E-20, 5.4444466, 2.0999995]
-int_tests = [123, -123, 0, 9007199254740991]
+int_tests = [123, -123, 0, JS_MAX, JS_MIN]
 
 _test_suite_input = {
   '%': [1, -1, 'a', 'asdf', 123],
@@ -39,7 +41,8 @@ val = {
   }
 
 def get_prefix():
-  for i in xrange(0, 6):
+  yield ''
+  for i in xrange(0, 7):
     for l in combinations([' ', '-', '+', '#', '0', '6', '.6'], r = i):
       yield ''.join(l)
 
@@ -66,17 +69,19 @@ for prefix, type_map in expected.items():
 				if fmt_type == '%':
 					if len(prefix) > 0:
 						new_expected[prefix][fmt_type].append('"throwsA"')
-						print cfmt, 'throws'
+						#print cfmt, 'throws'
 						continue
 					else:
 						sprintf(ret, cfmt, input_data)
-						print cfmt, ret.value
+						#print cfmt, ret.value
 						new_expected[prefix][fmt_type].append(ret.value)
 				
 				elif fmt_type in 'doxX':
-											
-					sprintf(ret, cfmt, c_int64(input_data))
-					print cfmt, ret.value
+					if fmt_type in 'oxX':
+						wrapped = input_data&JS_MAX
+					else:
+						wrapped = input_data
+					sprintf(ret, cfmt, c_int64(wrapped))
 					new_expected[prefix][fmt_type].append(ret.value)
 					
 					#if 'x' in fmt_type and input_data == -123:
@@ -84,13 +89,13 @@ for prefix, type_map in expected.items():
 				
 				elif fmt_type in 'efgEFG':
 					sprintf(ret, cfmt, c_double(input_data))
-					print cfmt, ret.value
+					#print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
 				
 				else:
 					ret = create_string_buffer(1024)
 					sprintf(ret, cfmt, input_data)
-					print cfmt, ret.value
+					#print cfmt, ret.value
 					new_expected[prefix][fmt_type].append(ret.value)
 			except ValueError:
 				raise

@@ -8,6 +8,16 @@ Dart implementation of sprintf.
 
 ChangeLog
 ---------
+v4.0.0 (2018-07-02)
+
+	* **Breaking change** (#13)
+	  As of dart 2, int types are going to be fixed width, and the width depends on
+      implementation (dart2js vs dartvm). Dart started warning about constants that
+      are greater than the max int of javascript. To fix that, this patch will limit
+      int (when formatted as hex or octal) to the max limit of javascript (2**53 - 1).
+      Any int outside of the +-(2**53 -1) range is not guaranteed to format correctly!
+
+
 v3.0.2 (2017-08-17)
 
 	* Fixed bad publish

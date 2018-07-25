@@ -117,7 +117,6 @@ test_large_exponents_f() {
 
 test_object_to_string() {
   List<String> list = ["foo", "bar"];
-  int i= 1;
   test("|%s| ['foo', 'bar'].toString()", () => expect(sprintf("%s", [list]), "[foo, bar]"));
 }
 main() {

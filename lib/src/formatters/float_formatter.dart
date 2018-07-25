@@ -11,7 +11,6 @@ class FloatFormatter extends Formatter {
   int _exponent = 0;
   int _decimal = 0;
   bool _is_negative = false;
-  bool _fraction_is_negative = false;
   bool _has_init = false;
 	String _output = null;
 

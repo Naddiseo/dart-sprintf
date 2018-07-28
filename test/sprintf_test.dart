@@ -68,17 +68,29 @@ test_bug0010() {
 }
 
 test_javascript_decimal_limit() {
-  test("%d 9007199254740991", () => expect(sprintf("|%d|", [9007199254740991]), '|9007199254740991|'));
-  test("%d 9007199254740992", () => expect(sprintf("|%d|", [9007199254740992]), '|9007199254740992|'));
-  test("%d 9007199254740993", () => expect(sprintf("|%d|", [9007199254740993]), '|9007199254740993|'));
+  test("%d 9007199254740991", () => expect(sprintf("|%d|", [9007199254740991+0]), '|9007199254740991|'));
+  //test("%d 9007199254740992", () => expect(sprintf("|%d|", [9007199254740991+1]), '|0|'));
+  //test("%d 9007199254740993", () => expect(sprintf("|%d|", [9007199254740991+2]), '|1|'));
 
-  test("%x 9007199254740991", () => expect(sprintf("|%x|", [9007199254740991]), '|1fffffffffffff|'));
-  test("%x 9007199254740992", () => expect(sprintf("|%x|", [9007199254740992]), '|20000000000000|'));
-  test("%x 9007199254740993", () => expect(sprintf("|%x|", [9007199254740993]), '|20000000000001|'));
+  test("%x 9007199254740991", () => expect(sprintf("|%x|", [9007199254740991+0]), '|1fffffffffffff|'));
+  //test("%x 9007199254740992", () => expect(sprintf("|%x|", [9007199254740991+1]), '|0|'));
+  //test("%x 9007199254740993", () => expect(sprintf("|%x|", [9007199254740991+2]), '|1|'));
 
-  test("%x 9007199254740991", () => expect(sprintf("|%x|", [-9007199254740991]), '|ffe0000000000001|'));
-  test("%x 9007199254740992", () => expect(sprintf("|%x|", [-9007199254740992]), '|ffe0000000000000|'));
-  test("%x 9007199254740993", () => expect(sprintf("|%x|", [-9007199254740993]), '|ffdfffffffffffff|'));
+  test("%x -9007199254740991", () => expect(sprintf("|%x|", [-9007199254740991+0]), '|1|'));
+  //test("%x -9007199254740992", () => expect(sprintf("|%x|", [-9007199254740991+1]), '|2|'));
+  //test("%x -9007199254740993", () => expect(sprintf("|%x|", [-9007199254740991+2]), '|3|'));
+}
+
+test_unsigned_neg_to_53bits() {
+  test("|%x|%X| -0", () => expect(sprintf("|%x|%X|", [-0, -0]), '|0|0|'));
+  test("|%x|%X| -1", () => expect(sprintf("|%x|%X|", [-1, -1]), '|1fffffffffffff|1FFFFFFFFFFFFF|'));
+  test("|%x|%X| -2", () => expect(sprintf("|%x|%X|", [-2, -2]), '|1ffffffffffffe|1FFFFFFFFFFFFE|'));
+}
+
+test_int_formatting() {
+  test("|%+d|% d| 2", () => expect(sprintf("|%+d|% d|", [2, 2]), '|+2| 2|'));
+  test("|%+d|% d| -2", () => expect(sprintf("|%+d|% d|", [-2, -2]), '|-2|-2|'));
+  test("|%+x|% X|%#x| -2", () => expect(sprintf("|%+x|% X|%#x|", [-2, -2, -2]), '|1ffffffffffffe|1FFFFFFFFFFFFE|0x1ffffffffffffe|'));
 }
 
 test_large_exponents_e() {
@@ -105,18 +117,18 @@ test_large_exponents_f() {
 
 test_object_to_string() {
   List<String> list = ["foo", "bar"];
-  int i= 1;
   test("|%s| ['foo', 'bar'].toString()", () => expect(sprintf("%s", [list]), "[foo, bar]"));
 }
-
 main() {
   //test_bug0009();
   //test_bug0010();
   //test("|%f| 1.79E+308", () => expect(sprintf("|%f|", [1.79e+308]), '|1.79e+308|'));
-
+  test_unsigned_neg_to_53bits();
+    test_int_formatting();
+  
+    test_javascript_decimal_limit();
   if (true) {
     test_testdata();
-    test_javascript_decimal_limit();
     test_large_exponents_e();
     test_large_exponents_g();
     //test_large_exponents_f();
@@ -128,6 +140,6 @@ main() {
     test_bug0009();
     test_bug0010();
 
-    //test_object_to_string();
+    test_object_to_string();
   }
 }

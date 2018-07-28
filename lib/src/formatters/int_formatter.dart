@@ -1,8 +1,10 @@
 part of sprintf;
 
+
 class IntFormatter extends Formatter {
   int _arg;
-  static const int MAX_INT = 0xffffffffffffffff; // 64bit
+  static const int MAX_INT = 0x1FFFFFFFFFFFFF; // javascript 53bit
+  
   IntFormatter(this._arg, var fmt_type, var options) : super(fmt_type, options);
 
   String asString() {
@@ -12,12 +14,13 @@ class IntFormatter extends Formatter {
     int radix = fmt_type == 'x' ? 16 : (fmt_type == 'o' ? 8 : 10);
 
     if (_arg < 0) {
-      _arg = _arg.abs();
       if (radix == 10) {
+        _arg = _arg.abs();
         options['sign'] = '-';
       }
       else {
-        _arg = (MAX_INT - (_arg % MAX_INT) + 1) & MAX_INT;
+        // sort of reverse twos complement
+        _arg = (MAX_INT - (~_arg) & MAX_INT);
       }
     }
 

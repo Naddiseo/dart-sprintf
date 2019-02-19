@@ -8,6 +8,11 @@ Dart implementation of sprintf.
 
 ChangeLog
 ---------
+
+v4.0.1 (2019-02-12)
+
+	* Fixed rounding bug if 0 or 1 digits of rounding are requested (#15)
+
 v4.0.0 (2018-07-02)
 
 	* **Breaking change** (#13)

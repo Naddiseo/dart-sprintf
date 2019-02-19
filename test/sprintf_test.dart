@@ -119,7 +119,14 @@ test_object_to_string() {
   List<String> list = ["foo", "bar"];
   test("|%s| ['foo', 'bar'].toString()", () => expect(sprintf("%s", [list]), "[foo, bar]"));
 }
+test_round_bug0015() {
+  double n = 1;
+  test("|%.0f| 1", () => expect(sprintf("|%.0f|", [n]), "|1|"));
+  test("|%.1f| 1", () => expect(sprintf("|%.1f|", [n]), "|1.0|"));
+}
+
 main() {
+  test_round_bug0015();
   //test_bug0009();
   //test_bug0010();
   //test("|%f| 1.79E+308", () => expect(sprintf("|%f|", [1.79e+308]), '|1.79e+308|'));

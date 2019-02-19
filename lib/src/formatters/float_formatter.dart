@@ -269,6 +269,9 @@ class FloatFormatter extends Formatter {
 
 		// Round the digit after the precision
 		int d = _digits[rounding_offset];
+    if (rounding_offset >= _digits.length) {
+      return;
+    }
     carry = d >= 5 ? 1 : 0;
 		_digits[rounding_offset] = d % 10;
 		rounding_offset -= 1;

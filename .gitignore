@@ -5,3 +5,5 @@ tools/test_data.dart
 *~
 .pydevproject
 .settings
+.dart_tool
+.vscode

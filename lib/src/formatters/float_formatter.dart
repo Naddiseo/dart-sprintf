@@ -1,7 +1,6 @@
 part of sprintf;
 
 class FloatFormatter extends Formatter {
-  // TODO: can't rely on '.' being the decimal separator
   static final _number_rx = new RegExp(r'^[\-\+]?(\d+)(?:\.(\d+))?$');
   static final _expo_rx = new RegExp(r'^[\-\+]?(\d)\.(\d+)e([\-\+]?\d+)$');
   static final _leading_zeroes_rx = new RegExp(r'^(0*)[1-9]+');

@@ -7,3 +7,4 @@ tools/test_data.dart
 .settings
 .dart_tool
 .vscode
+.packages

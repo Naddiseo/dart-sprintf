@@ -2,3 +2,7 @@ language: dart
 dart:
     - stable
     - dev
+dart_task:
+    - test: --platform vm
+    - test: --platform node
+    - test: --platform chrome

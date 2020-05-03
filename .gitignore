@@ -1,6 +1,7 @@
 pubspec.lock
 .project
 packages
+.packages
 tools/test_data.dart
 *~
 .pydevproject

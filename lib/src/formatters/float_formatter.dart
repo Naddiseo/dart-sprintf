@@ -16,12 +16,15 @@ class FloatFormatter extends Formatter {
 
   FloatFormatter(this._arg, var fmt_type, var options)
       : super(fmt_type, options) {
+    _arg = _arg.toDouble();
+
     if (_arg < 0) {
       this._is_negative = true;
       _arg = -_arg;
     }
 
-    String arg_str = _arg.toDouble().toString();
+    String arg_str =
+        _arg == _arg.truncate() ? _arg.toStringAsFixed(1) : _arg.toString();
 
     Match m1 = _number_rx.firstMatch(arg_str);
     if (m1 != null) {

@@ -157,8 +157,18 @@ test_round_bug0015() {
   test("|%.2f| 1.235", () => expect(sprintf("|%.2f|", [1.235]), "|1.24|"));
 }
 
+test_bug0018() {
+  test(
+      "|%10.4f| 1.0", () => expect(sprintf("|%10.4f|", [1.0]), "|    1.0000|"));
+}
+
 main() {
-  test_round_bug0015();
+  test("|%6.6g -1.79e+20",
+      () => expect(sprintf("|%6.6g|", [-1.79E+20]), "|-1.79e+20|"));
+  test("|%6.6G -1.79e+20",
+      () => expect(sprintf("|%6.6G|", [-1.79E+20]), "|-1.79E+20|"));
+  test_bug0018();
+
   //test_bug0009();
   //test_bug0010();
   //test("|%f| 1.79E+308", () => expect(sprintf("|%f|", [1.79e+308]), '|1.79e+308|'));

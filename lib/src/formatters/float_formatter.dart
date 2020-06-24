@@ -7,7 +7,7 @@ class FloatFormatter extends Formatter {
   static final _leading_zeroes_rx = new RegExp(r'^(0*)[1-9]+');
 
   double _arg;
-  List<int> _digits = new List<int>();
+  List<int> _digits = [];
   int _exponent = 0;
   int _decimal = 0;
   bool _is_negative = false;

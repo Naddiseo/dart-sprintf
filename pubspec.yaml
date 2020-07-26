@@ -1,7 +1,8 @@
 name: sprintf
 version: 4.0.3
 author: Richard Eames <dartsprintf@naddiseo.ca>
-description: Dart implementation of sprintf
+description: Dart implementation of sprintf. Provides simple printf like
+  formatting such as sprintf("hello %s", ["world"]);
 homepage: https://github.com/Naddiseo/dart-sprintf
 environment:
   sdk: "<3.0.0"

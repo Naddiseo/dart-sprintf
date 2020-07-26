@@ -1,3 +1,8 @@
+v4.1.0 (2020-07-26)
+
+    * Used dart padentic to fix up some code
+    * changed SDK requirements to be >=2, <3
+
 v4.0.3 (2020-07-26)
 
     * Fixed formatting of "1.0" (#18); it was being truncated to "1" and then

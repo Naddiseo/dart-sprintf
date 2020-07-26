@@ -8,6 +8,6 @@ part 'src/formatters/float_formatter.dart';
 part 'src/formatters/string_formatter.dart';
 part 'src/sprintf_impl.dart';
 
-typedef SPrintF(String fmt, var args);
+//typedef SPrintF = String Function(String fmt,  args);
 
-var sprintf = new PrintFormat();
+var sprintf = PrintFormat();

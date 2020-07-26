@@ -1,24 +1,23 @@
 part of sprintf;
 
-
 class IntFormatter extends Formatter {
   int _arg;
   static const int MAX_INT = 0x1FFFFFFFFFFFFF; // javascript 53bit
-  
+
   IntFormatter(this._arg, var fmt_type, var options) : super(fmt_type, options);
 
+  @override
   String asString() {
-    String ret = '';
-    String prefix = '';
+    var ret = '';
+    var prefix = '';
 
-    int radix = fmt_type == 'x' ? 16 : (fmt_type == 'o' ? 8 : 10);
+    var radix = fmt_type == 'x' ? 16 : (fmt_type == 'o' ? 8 : 10);
 
     if (_arg < 0) {
       if (radix == 10) {
         _arg = _arg.abs();
         options['sign'] = '-';
-      }
-      else {
+      } else {
         // sort of reverse twos complement
         _arg = (MAX_INT - (~_arg) & MAX_INT);
       }
@@ -28,10 +27,9 @@ class IntFormatter extends Formatter {
 
     if (options['alternate_form']) {
       if (radix == 16 && _arg != 0) {
-        prefix = "0x";
-      }
-      else if (radix == 8 && _arg != 0) {
-        prefix = "0";
+        prefix = '0x';
+      } else if (radix == 8 && _arg != 0) {
+        prefix = '0';
       }
       if (options['sign'] == '+' && radix != 10) {
         options['sign'] = '';
@@ -39,7 +37,10 @@ class IntFormatter extends Formatter {
     }
 
     // space "prefixes non-negative signed numbers with a space"
-    if ((options['add_space'] && options['sign'] == '' && _arg > -1 && radix == 10)) {
+    if ((options['add_space'] &&
+        options['sign'] == '' &&
+        _arg > -1 &&
+        radix == 10)) {
       options['sign'] = ' ';
     }
 
@@ -47,10 +48,10 @@ class IntFormatter extends Formatter {
       options['sign'] = '';
     }
 
-    String padding = '';
+    var padding = '';
     var min_digits = options['precision'];
     var min_chars = options['width'];
-    int num_length = ret.length;
+    var num_length = ret.length;
     var sign_length = options['sign'].length;
     num str_len = 0;
 
@@ -60,7 +61,7 @@ class IntFormatter extends Formatter {
 
     if (min_digits > num_length) {
       padding = Formatter.get_padding(min_digits - num_length, '0');
-      ret = "${padding}${ret}";
+      ret = '${padding}${ret}';
       num_length = ret.length;
       padding = '';
     }
@@ -69,19 +70,16 @@ class IntFormatter extends Formatter {
     if (min_chars > str_len) {
       if (options['padding_char'] == '0' && !options['left_align']) {
         padding = Formatter.get_padding(min_chars - str_len, '0');
-      }
-      else {
+      } else {
         padding = Formatter.get_padding(min_chars - str_len, ' ');
       }
     }
 
     if (options['left_align']) {
-      ret ="${options['sign']}${prefix}${ret}${padding}";
-    }
-    else if (options['padding_char'] == '0') {
+      ret = "${options['sign']}${prefix}${ret}${padding}";
+    } else if (options['padding_char'] == '0') {
       ret = "${options['sign']}${prefix}${padding}${ret}";
-    }
-    else {
+    } else {
       ret = "${padding}${options['sign']}${prefix}${ret}";
     }
 

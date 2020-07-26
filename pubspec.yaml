@@ -10,3 +10,4 @@ environment:
 
 dev_dependencies:
   test: any
+  pedantic: ^1.9.0

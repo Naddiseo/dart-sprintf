@@ -1,3 +1,12 @@
+v5.0.0 (2020-09-25)
+
+    * Fix #22: position arguments didn't work. Major version bump because it's
+      a different API. The following now works:
+      ```
+      sprintf('|%2\$d %2\$d %1\$d|', [5, 10]); // '|10 10 5|'
+      ```
+
+
 v4.1.0 (2020-07-26)
 
     * Used dart padentic to fix up some code

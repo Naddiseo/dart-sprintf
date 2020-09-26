@@ -58,7 +58,7 @@ class PrintFormat {
       });
 
       // The argument we want to deal with
-      var _arg = _parameter == null ? null : args[int.parse(_parameter)];
+      var _arg = _parameter == null ? null : args[int.parse(_parameter) - 1];
 
       // parse width
       if (_width != null) {

@@ -163,7 +163,18 @@ void test_bug0018() {
       '|%10.4f| 1.0', () => expect(sprintf('|%10.4f|', [1.0]), '|    1.0000|'));
 }
 
+void test_bug0022() {
+  test('|%2\$d %2\$d %1\$d|',
+      () => expect(sprintf('|%2\$d %2\$d %1\$d|', [5, 10]), '|10 10 5|'));
+
+  // these next two are from the sprintf manual, and should print the same
+  test('|%*d|', () => expect(sprintf('|%*d|', [5, 10]), '|   10|'));
+  test('|%2\$*1\$d|', () => expect(sprintf('|%*d|', [5, 10]), '|   10|'));
+}
+
 void main() {
+  test_bug0022();
+
   test('|%6.6g -1.79e+20',
       () => expect(sprintf('|%6.6g|', [-1.79E+20]), '|-1.79e+20|'));
   test('|%6.6G -1.79e+20',

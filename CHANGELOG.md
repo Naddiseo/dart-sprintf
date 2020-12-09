@@ -1,3 +1,7 @@
+v6.0.0-nullsafety (2020-12-10)
+
+    * Add null-safety support
+
 v5.0.0 (2020-09-25)
 
     * Fix #22: position arguments didn't work. Major version bump because it's

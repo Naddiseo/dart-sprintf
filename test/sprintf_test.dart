@@ -11,14 +11,14 @@ void test_testdata() {
     group('"%${prefix}" Tests, ', () {
       type_map.forEach((type, expected_array) {
         var fmt = '|%${prefix}${type}|';
-        var input_array = expectedTestInputData[type];
+        var input_array = expectedTestInputData[type]!;
 
         assert(input_array.length == expected_array.length);
 
         for (var i = 0; i < input_array.length - 1; i++) {
           var raw_input = input_array[i];
           var expected = expected_array[i];
-          List input = raw_input is! List ? [raw_input] : raw_input;
+          final input = raw_input is! List ? [raw_input] : raw_input;
 
           if (expected == '"throwsA"') {
             test('Expecting "${fmt}".format(${raw_input}) to throw',

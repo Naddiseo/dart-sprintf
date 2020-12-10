@@ -13,7 +13,7 @@ class FloatFormatter extends Formatter {
   int _decimal = 0;
   bool _is_negative = false;
   bool _has_init = false;
-  String _output;
+  String? _output;
 
   FloatFormatter(this._arg, var fmt_type, var options)
       : super(fmt_type, options) {
@@ -29,8 +29,8 @@ class FloatFormatter extends Formatter {
 
     var m1 = _number_rx.firstMatch(arg_str);
     if (m1 != null) {
-      var int_part = m1.group(1);
-      var fraction = m1.group(2);
+      var int_part = m1.group(1)!;
+      var fraction = m1.group(2)!;
 
       /*
        * Cases:
@@ -49,7 +49,7 @@ class FloatFormatter extends Formatter {
           var leading_zeroes_match = _leading_zeroes_rx.firstMatch(fraction);
 
           if (leading_zeroes_match != null) {
-            var zeroes_count = leading_zeroes_match.group(1).length;
+            var zeroes_count = leading_zeroes_match.group(1)!.length;
             // print("zeroes_count=${zeroes_count}");
             _exponent =
                 zeroes_count > 0 ? -(zeroes_count + 1) : zeroes_count - 1;
@@ -66,9 +66,9 @@ class FloatFormatter extends Formatter {
     } else {
       var m2 = _expo_rx.firstMatch(arg_str);
       if (m2 != null) {
-        var int_part = m2.group(1);
-        var fraction = m2.group(2);
-        _exponent = int.parse(m2.group(3));
+        var int_part = m2.group(1)!;
+        var fraction = m2.group(2)!;
+        _exponent = int.parse(m2.group(3)!);
 
         if (_exponent > 0) {
           var diff = _exponent - fraction.length + 1;
@@ -101,7 +101,7 @@ class FloatFormatter extends Formatter {
     }
 
     if (_output != null) {
-      return _output;
+      return _output!;
     }
 
     if (options['add_space'] && options['sign'] == '' && _arg >= 0) {
@@ -147,7 +147,7 @@ class FloatFormatter extends Formatter {
           sig_digs -= _decimal;
           var precision = max<num>(options['precision'] - 1 - _exp, sig_digs);
 
-          ret = asFixed(precision,
+          ret = asFixed(precision.toInt(),
               remove_trailing_zeros: !options['alternate_form']);
         } else {
           ret = asExponential(options['precision'] - 1,

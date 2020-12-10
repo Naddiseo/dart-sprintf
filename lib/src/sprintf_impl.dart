@@ -37,10 +37,10 @@ class PrintFormat {
 
     for (var m in specifier.allMatches(fmt)) {
       var _parameter = m[1];
-      var _flags = m[2];
+      var _flags = m[2]!;
       var _width = m[3];
       var _precision = m[4];
-      var _type = m[5];
+      var _type = m[5]!;
 
       var _arg_str = '';
       var _options = {
@@ -85,7 +85,7 @@ class PrintFormat {
         }
         _arg_str = '%';
       } else if (_formatters.containsKey(_type)) {
-        _arg_str = _formatters[_type](_arg, _options).asString();
+        _arg_str = _formatters[_type]!(_arg, _options).asString();
       } else {
         throw ArgumentError('Unknown format type ${_type}');
       }

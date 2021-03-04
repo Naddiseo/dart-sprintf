@@ -1,3 +1,7 @@
+v6.0.0 (2021-03-04)
+
+    * Promote null-safety to stable
+
 v6.0.0-nullsafety (2020-12-10)
 
     * Add null-safety support

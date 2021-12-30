@@ -129,30 +129,28 @@ class FloatFormatter extends Formatter {
       options['precision'] = 1;
     }
 
-    if (_arg is num) {
-      if (_is_negative) {
-        options['sign'] = '-';
-      }
+    if (_is_negative) {
+      options['sign'] = '-';
+    }
 
-      if (fmt_type == 'e') {
-        ret = asExponential(options['precision'], remove_trailing_zeros: false);
-      } else if (fmt_type == 'f') {
-        ret = asFixed(options['precision'], remove_trailing_zeros: false);
+    if (fmt_type == 'e') {
+      ret = asExponential(options['precision'], remove_trailing_zeros: false);
+    } else if (fmt_type == 'f') {
+      ret = asFixed(options['precision'], remove_trailing_zeros: false);
+    } else {
+      // type == g
+      var _exp = _exponent;
+      var sig_digs = options['precision'];
+      // print("${_exp} ${sig_digs}");
+      if (-4 <= _exp && _exp < options['precision']) {
+        sig_digs -= _decimal;
+        var precision = max<num>(options['precision'] - 1 - _exp, sig_digs);
+
+        ret = asFixed(precision.toInt(),
+            remove_trailing_zeros: !options['alternate_form']);
       } else {
-        // type == g
-        var _exp = _exponent;
-        var sig_digs = options['precision'];
-        // print("${_exp} ${sig_digs}");
-        if (-4 <= _exp && _exp < options['precision']) {
-          sig_digs -= _decimal;
-          var precision = max<num>(options['precision'] - 1 - _exp, sig_digs);
-
-          ret = asFixed(precision.toInt(),
-              remove_trailing_zeros: !options['alternate_form']);
-        } else {
-          ret = asExponential(options['precision'] - 1,
-              remove_trailing_zeros: !options['alternate_form']);
-        }
+        ret = asExponential(options['precision'] - 1,
+            remove_trailing_zeros: !options['alternate_form']);
       }
     }
 

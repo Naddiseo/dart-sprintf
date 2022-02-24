@@ -8,7 +8,7 @@ part 'testing_data.dart';
 
 void test_testdata() {
   expectedTestData.forEach((prefix, type_map) {
-    group('"%${prefix}" Tests, ', () {
+    group('"%$prefix Tests, ', () {
       type_map.forEach((type, expected_array) {
         var fmt = '|%${prefix}${type}|';
         var input_array = expectedTestInputData[type]!;

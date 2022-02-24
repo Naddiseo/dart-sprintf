@@ -1,3 +1,8 @@
+v6.0.1 (2022-02-24)
+
+    * Upgrade analyze package to dart:lint
+    * code formatting
+    
 v6.0.0 (2021-03-04)
 
     * Promote null-safety to stable

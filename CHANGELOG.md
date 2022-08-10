@@ -1,3 +1,7 @@
+v6.0.2 (2022-08-10)
+
+    * pub policy compliance
+
 v6.0.1 (2022-02-24)
 
     * Upgrade analyze package to dart:lint

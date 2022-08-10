@@ -1,5 +1,5 @@
 name: sprintf
-version: 6.0.1
+version: 6.0.2
 description: Dart implementation of sprintf. Provides simple printf like
   formatting such as sprintf("hello %s", ["world"]);
 homepage: https://github.com/Naddiseo/dart-sprintf

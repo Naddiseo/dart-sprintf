@@ -14,7 +14,7 @@ Add the following to your **pubspec.yaml**:
 
 ```
 dependencies:
-  sprintf: "^6.0.0"
+  sprintf: "^7.0.0"
 ```
 
 then run **pub install**.

@@ -17,6 +17,17 @@ class FloatFormatter extends Formatter {
 
   FloatFormatter(this._arg, var fmt_type, var options)
       : super(fmt_type, options) {
+    if (_arg.isNaN) {
+      _has_init = true;
+      return;
+    }
+
+    if (_arg.isInfinite) {
+      _is_negative = _arg.isNegative;
+      _has_init = true;
+      return;
+    }
+
     _arg = _arg.toDouble();
 
     if (_arg < 0) {
@@ -133,24 +144,26 @@ class FloatFormatter extends Formatter {
       options['sign'] = '-';
     }
 
-    if (fmt_type == 'e') {
-      ret = asExponential(options['precision'], remove_trailing_zeros: false);
-    } else if (fmt_type == 'f') {
-      ret = asFixed(options['precision'], remove_trailing_zeros: false);
-    } else {
-      // type == g
-      var _exp = _exponent;
-      var sig_digs = options['precision'];
-      // print("${_exp} ${sig_digs}");
-      if (-4 <= _exp && _exp < options['precision']) {
-        sig_digs -= _decimal;
-        var precision = max<num>(options['precision'] - 1 - _exp, sig_digs);
-
-        ret = asFixed(precision.toInt(),
-            remove_trailing_zeros: !options['alternate_form']);
+    if (!(_arg.isInfinite || _arg.isNaN)) {
+      if (fmt_type == 'e') {
+        ret = asExponential(options['precision'], remove_trailing_zeros: false);
+      } else if (fmt_type == 'f') {
+        ret = asFixed(options['precision'], remove_trailing_zeros: false);
       } else {
-        ret = asExponential(options['precision'] - 1,
-            remove_trailing_zeros: !options['alternate_form']);
+        // type == g
+        var _exp = _exponent;
+        var sig_digs = options['precision'];
+        // print("${_exp} ${sig_digs}");
+        if (-4 <= _exp && _exp < options['precision']) {
+          sig_digs -= _decimal;
+          var precision = max<num>(options['precision'] - 1 - _exp, sig_digs);
+
+          ret = asFixed(precision.toInt(),
+              remove_trailing_zeros: !options['alternate_form']);
+        } else {
+          ret = asExponential(options['precision'] - 1,
+              remove_trailing_zeros: !options['alternate_form']);
+        }
       }
     }
 

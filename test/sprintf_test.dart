@@ -172,6 +172,24 @@ void test_bug0022() {
   test('|%2\$*1\$d|', () => expect(sprintf('|%*d|', [5, 10]), '|   10|'));
 }
 
+void test_bug0033() {
+  var inf = 1.0 / 0.0;
+  var nan = 0.0 / 0.0;
+  test(
+      '|%g %G| Infinity',
+      () => expect(sprintf('|%g %g %G %G|', [inf, -inf, inf, -inf]),
+          '|inf -inf INF -INF|'));
+  test(
+      '|%g %G| NaN', () => expect(sprintf('|%g %G|', [nan, nan]), '|nan NAN|'));
+
+  test(
+      '|%f %F| Infinity',
+      () => expect(sprintf('|%f %f %F %F|', [inf, -inf, inf, -inf]),
+          '|inf -inf INF -INF|'));
+  test(
+      '|%f %F| NaN', () => expect(sprintf('|%f %F|', [nan, nan]), '|nan NAN|'));
+}
+
 void main() {
   test_bug0022();
 
@@ -203,4 +221,5 @@ void main() {
 
     test_object_to_string();
   }
+  test_bug0033();
 }

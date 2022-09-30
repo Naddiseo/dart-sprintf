@@ -1,3 +1,7 @@
+v7.0.0 (2022-09-30)
+
+    * properly format Infinity and NaN for %f and %G  (#33)
+    
 v6.0.2 (2022-08-10)
 
     * pub policy compliance

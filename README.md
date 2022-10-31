@@ -12,7 +12,7 @@ Dart implementation of sprintf.
 
 Add the following to your **pubspec.yaml**:
 
-```
+```yaml
 dependencies:
   sprintf: "^7.0.0"
 ```
@@ -21,13 +21,13 @@ then run **pub install**.
 
 Next, import dart-sprintf:
 
-```
+```dart
 import 'package:sprintf/sprintf.dart';
 ```
 
 ### Example
 
-```
+```dart
 import 'package:sprintf/sprintf.dart';
 
 void main() {
